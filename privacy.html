@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="PAIA 隐私说明">
+  <title>PAIA | 隐私说明</title>
+  <link rel="icon" href="assets/logo-wave-note.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html"><img src="assets/logo-wave-note.svg" alt="PAIA Logo"><span>PAIA</span></a>
+    <nav class="site-nav" aria-label="主导航"><a href="index.html#release">下载</a><a href="index.html#features">能力</a><a href="index.html#faq">常见问题</a></nav>
+  </header>
+  <main>
+    <section class="faq-section" style="border-top:0; padding-top:72px">
+      <div class="section-heading">
+        <p class="eyebrow">PRIVACY</p>
+        <h1 style="font-size:clamp(2.8rem, 7vw, 5rem); margin-bottom:20px">隐私说明</h1>
+        <p>更新日期：2026 年 9 月 9 日</p>
+      </div>
+      <div class="faq-list">
+        <details open><summary>1. 数据默认存在哪里</summary><p>PAIA 默认把会话标题、消息、录音、照片、批次摘要和应用配置保存在 Android 应用私有目录。PAIA 发布者没有统一的云端会议数据库，也不会因为用户打开应用就自动收集这些内容。</p></details>
+        <details open><summary>2. 模型请求如何发送</summary><p>当你主动使用实时转写、同声传译、问答或会议纪要时，应用会把对应内容发送到你在设置中填写的服务商接口，例如百炼或兼容的第三方接口。具体处理和保留期限由相应服务商的政策决定。</p></details>
+        <details open><summary>3. API Key 如何保存</summary><p>API Key 只保存在本机的加密偏好存储中，不写入普通发布页面、会话导出内容或应用日志。请不要把 API Key 发布到 Gitee Issue、截图或公开仓库。</p></details>
+        <details open><summary>4. 权限用途</summary><p>麦克风用于录音和语音识别，相机用于拍摄现场资料，通知权限用于显示录音和后台任务状态。你可以在系统设置中随时撤回权限；撤回后相应功能将不可用。</p></details>
+        <details open><summary>5. 删除和升级</summary><p>在应用内删除会话时，应用会清理不再被其他会话引用的媒体文件。同包名、同签名的覆盖升级通常会保留本机数据；卸载应用可能会删除应用私有目录。</p></details>
+        <details open><summary>6. 联系方式</summary><p>问题反馈请通过 PAIA 的 Gitee 仓库 Issue 提交。请只提供版本号、设备型号和复现步骤，不要上传会议原音频、照片或任何密钥。</p></details>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer"><div><strong>PAIA</strong><span>会议与课堂助手</span></div><div class="footer-links"><a href="index.html">返回首页</a><a href="https://gitee.com/Houton_Bosta/paia-site" target="_blank" rel="noreferrer">Gitee</a></div><p>请在正式公开运营前，根据实际收集范围和服务商政策审阅本说明。</p></footer>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "versionName": "1.4",
+  "versionCode": 5,
+  "minAndroid": "Android 7.0+",
+  "releaseDate": "2026-09-09",
+  "releaseNotes": "加入可选的 GPT 专家模型；未配置 GPT Key 时，图片和专业文本任务可使用百炼 Key 调度 qwen3.8-max；默认配色恢复为紫色，并支持多套强调色。",
+  "apkUrl": "",
+  "apkSize": 0,
+  "sha256": "",
+  "appGalleryUrl": "",
+  "repositoryUrl": "https://gitee.com/Houton_Bosta/paia-site"
+}
