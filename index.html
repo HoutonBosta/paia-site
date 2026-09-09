@@ -62,10 +62,10 @@
           </div>
           <p class="release-notes" id="release-notes">正在读取更新说明……</p>
           <div class="release-actions">
-            <a class="button button-primary" id="download-link" href="#" aria-disabled="true">APK 尚未发布</a>
+            <a class="button button-primary" id="download-link" href="#" aria-disabled="true">下载公开测试版 APK</a>
             <a class="button button-outline" id="app-gallery-link" href="#" aria-disabled="true">华为应用市场</a>
           </div>
-          <p class="micro-copy" id="download-status">发布 APK 后，这里的按钮会自动启用。</p>
+          <p class="micro-copy" id="download-status">公开测试版已提供；安装前请核对版本和 SHA-256。</p>
         </article>
         <aside class="release-meta" aria-label="版本详情">
           <dl>
@@ -111,7 +111,7 @@
       </div>
       <div class="faq-list">
         <details><summary>安装 APK 会不会覆盖掉原来的会话？</summary><p>使用同一 applicationId、同一正式签名并递增 versionCode 的 APK 覆盖安装，不会清除应用私有数据。不要先卸载旧版本。</p></details>
-        <details><summary>为什么页面上暂时不能下载？</summary><p>发布者需要先在 Gitee Release 上传 APK，再把附件地址和 SHA-256 写入 <code>release.json</code>。模板默认把按钮置为不可用，避免用户下载到错误文件。</p></details>
+        <details><summary>这个版本适合日常使用吗？</summary><p>这是公开测试版，使用 Android Debug 签名，适合体验和反馈问题。长时间录音、后台任务和不同设备兼容性仍可能存在问题，请不要在无法容忍数据丢失的场景中依赖它。</p></details>
         <details><summary>没有 VPN 能下载吗？</summary><p>国内发布页和下载附件建议放在 Gitee 或应用市场；GitHub 作为海外镜像。实际发布后请用手机关闭 VPN，分别测试 Wi-Fi 和移动数据。</p></details>
         <details><summary>遇到问题在哪里反馈？</summary><p>请在 Gitee 仓库的 Issue 中附上版本号、设备型号和可复现步骤，不要提交 API Key、录音或照片。</p></details>
       </div>

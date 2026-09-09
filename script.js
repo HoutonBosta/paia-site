@@ -6,10 +6,10 @@
     versionCode: 5,
     minAndroid: "Android 7.0+",
     releaseDate: "2026-09-09",
-    releaseNotes: "本地优先的会议与课堂助手。APK 发布后，这里会显示本版本的详细更新说明。",
-    apkUrl: "",
-    apkSize: 0,
-    sha256: "",
+    releaseNotes: "公开测试版：请从 Gitee Release 下载 APK，并在安装前核对 SHA-256。",
+    apkUrl: "https://gitee.com/Houton_Bosta/paia-site/releases/download/v1.4-test/PAIA-1.4-test.apk",
+    apkSize: 22721220,
+    sha256: "bb5a43bf2b950a346ca2667d50d9aa654bade334b90a4e3d0adc57a05d5826ee",
     appGalleryUrl: "",
     repositoryUrl: "https://gitee.com/Houton_Bosta/paia-site"
   };
@@ -57,8 +57,8 @@
     $("min-android").textContent = data.minAndroid || "Android 7.0+";
     $("apk-size").textContent = formatBytes(data.apkSize);
     $("sha256").textContent = data.sha256 || "发布后显示校验值";
-    $("hero-status").textContent = data.apkUrl ? `当前版本 ${data.versionName} · ${formatBytes(data.apkSize)}` : "当前版本正在准备发布";
-    $("download-status").textContent = data.apkUrl ? "下载前建议核对 SHA-256；安装时由 Android 系统确认。" : "发布 APK 后，这里的按钮会自动启用。";
+    $("hero-status").textContent = data.apkUrl ? `公开测试版 ${data.versionName} · ${formatBytes(data.apkSize)}` : "当前版本正在准备发布";
+    $("download-status").textContent = data.apkUrl ? "这是公开测试版；下载前建议核对 SHA-256。" : "发布 APK 后，这里的按钮会自动启用。";
     setLink($("download-link"), data.apkUrl);
     setLink($("hero-download"), data.apkUrl || "#release");
     setLink($("app-gallery-link"), data.appGalleryUrl);
