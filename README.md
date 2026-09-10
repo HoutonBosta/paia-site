@@ -1,8 +1,16 @@
 # PAIA 发布网站
 
-这是一个不依赖服务器的纯静态官网，适合发布到 Gitee Pages、GitHub Pages 或其他静态托管服务。
+这是一个不依赖服务器的纯静态官网。GitHub Pages 用于托管官网和海外镜像，APK 继续通过 Gitee Release 为国内用户提供下载。
 
-## 第一次发布到 Gitee
+## GitHub Pages
+
+GitHub 仓库：`https://github.com/HoutonBosta/paia-site`
+
+官网地址：`https://houtonbosta.github.io/paia-site/`
+
+网站从 `main` 分支根目录发布。仓库的 `Settings -> Pages` 应设置为 `Deploy from a branch`、`main`、`/(root)`。
+
+## Gitee 国内镜像
 
 建议在 Gitee 新建一个公开、空的仓库，名称使用 `paia-site`。不要在网页端预先勾选初始化 README，这样可以直接推送本目录。
 
@@ -58,4 +66,4 @@ APK 不放进 Git 提交历史；它应作为 Release 附件发布。当前 Gite
 - 点击 APK 下载并等待系统安装器；
 - 检查 Release 页面和 SHA-256 文本是否可访问。
 
-GitHub 可以作为源码和海外备用镜像，但不要让它成为中国大陆用户唯一的下载入口。
+GitHub Pages 是官网托管入口，但不要让 GitHub 成为中国大陆用户唯一的 APK 下载入口。

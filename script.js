@@ -11,7 +11,7 @@
     apkSize: 22721220,
     sha256: "bb5a43bf2b950a346ca2667d50d9aa654bade334b90a4e3d0adc57a05d5826ee",
     releasePageUrl: "https://gitee.com/Houton_Bosta/paia-site/releases/tag/v1.4-test",
-    repositoryUrl: "https://gitee.com/Houton_Bosta/paia-site"
+    repositoryUrl: "https://github.com/HoutonBosta/paia-site"
   };
 
   const $ = (id) => document.getElementById(id);
