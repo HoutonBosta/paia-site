@@ -1,12 +1,12 @@
 {
-  "versionName": "1.4",
-  "versionCode": 5,
+  "versionName": "1.5-test",
+  "versionCode": 6,
   "minAndroid": "Android 7.0+",
-  "releaseDate": "2026-09-09",
-  "releaseNotes": "公开测试版：加入可选的 GPT 专家模型；未配置 GPT Key 时，图片和专业文本任务可使用百炼 Key 调度 qwen3.8-max；默认配色恢复为紫色，并支持多套强调色。此 APK 使用 Android Debug 签名，仅用于测试，不代表正式稳定版。",
-  "apkUrl": "https://gitee.com/Houton_Bosta/paia-site/releases/download/v1.4-test/PAIA-1.4-test.apk",
-  "apkSize": 22721220,
-  "sha256": "bb5a43bf2b950a346ca2667d50d9aa654bade334b90a4e3d0adc57a05d5826ee",
-  "releasePageUrl": "https://gitee.com/Houton_Bosta/paia-site/releases/tag/v1.4-test",
+  "releaseDate": "2026-09-10",
+  "releaseNotes": "测试版：降低同声传译的界面刷新频率并移除高频全量会话写入；中途提问使用跨分段的最近三分钟音频快照，并限制索引异常时的音频回退范围；加入应用内反馈直传客户端和服务端模板。反馈服务正式部署前会提示尚未配置。此 APK 使用 Android Debug 签名，仅用于测试。",
+  "apkUrl": "https://gitee.com/Houton_Bosta/paia-site/releases/download/v1.5-test/PAIA-1.5-test.apk",
+  "apkSize": 22805917,
+  "sha256": "ba84fb6f2cfa71e2d5a513c39a69a0a871a1ed21214c1fb5e4410f6fa30fa763",
+  "releasePageUrl": "https://gitee.com/Houton_Bosta/paia-site/releases/tag/v1.5-test",
   "repositoryUrl": "https://github.com/HoutonBosta/paia-site"
 }
