@@ -1,12 +1,12 @@
 {
-  "versionName": "1.6-test",
-  "versionCode": 7,
+  "versionName": "1.6.1-test",
+  "versionCode": 8,
   "minAndroid": "Android 7.0+",
   "releaseDate": "2026-09-10",
-  "releaseNotes": "测试版：同声传译改为节流的短尾部预览，滚动时暂停界面刷新，结束后再合并并保存完整译文；中途提问优先使用正在录制的最近约三分钟音频快照、最近一个已完成分段和较早摘要，不再误处理整场旧音频；关于页面加入应用内更新下载、进度、暂停与继续、SHA-256 校验和安装入口；应用内反馈表单和私有 Gitee 存储模板已加入，服务端中转上线前会明确提示尚未配置。此 APK 使用 Android Debug 签名，仅用于测试。",
-  "apkUrl": "https://gitee.com/Houton_Bosta/paia-site/releases/download/v1.6-test/PAIA-1.6-test.apk",
-  "apkSize": 23365894,
-  "sha256": "9b0f9028c4033810bf070298c091d58906935bd5eb6de0729f22dc7b24492e38",
-  "releasePageUrl": "https://gitee.com/Houton_Bosta/paia-site/releases/tag/v1.6-test",
+  "releaseNotes": "更新器端到端测试目标版：功能与 1.6-test 相同。1.6-test 可在应用内发现本版本，并验证下载进度、暂停与继续、SHA-256 校验以及覆盖安装。功能内容包括同声传译滚动性能优化，以及中途提问使用正在录制的最近约三分钟音频快照、最近一个已完成分段和较早摘要。反馈服务端中转上线前会明确提示尚未配置。此 APK 使用 Android Debug 签名，仅用于测试。",
+  "apkUrl": "https://gitee.com/Houton_Bosta/paia-site/releases/download/v1.6.1-test/PAIA-1.6.1-test.apk",
+  "apkSize": 22838753,
+  "sha256": "fa2520c32112e511325ffa27cefa97e890e707baac9d4c33a27212f6c5713bb5",
+  "releasePageUrl": "https://gitee.com/Houton_Bosta/paia-site/releases/tag/v1.6.1-test",
   "repositoryUrl": "https://github.com/HoutonBosta/paia-site"
 }
