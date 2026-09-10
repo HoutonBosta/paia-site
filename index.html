@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="PAIA：面向会议、课堂和现场笔记的本地优先 Android 助手。">
   <meta name="theme-color" content="#5b4ab8">
+  <meta name="color-scheme" content="light dark">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="PAIA | 会议与课堂助手">
+  <meta property="og:description" content="记录、理解、回顾每一场会议和课堂。">
+  <meta property="og:image" content="https://gitee.com/Houton_Bosta/paia-site/raw/main/assets/logo-wave-note.svg">
   <title>PAIA | 会议与课堂助手</title>
   <link rel="icon" href="assets/logo-wave-note.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
@@ -19,7 +24,7 @@
     <nav class="site-nav" aria-label="主导航">
       <a href="#release">下载</a>
       <a href="#features">能力</a>
-      <a href="#privacy">隐私</a>
+      <a href="privacy.html">隐私</a>
       <a href="#faq">常见问题</a>
     </nav>
     <a class="text-link header-source" id="source-link" href="https://gitee.com/Houton_Bosta/paia-site" target="_blank" rel="noreferrer">Gitee 源码</a>
@@ -28,13 +33,13 @@
   <main>
     <section class="hero" id="top">
       <div class="hero-copy">
-        <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span>Android · 本地优先</p>
+        <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span>公开测试版 · Android</p>
         <h1>PAIA</h1>
         <p class="hero-lead">让会议和课堂留下可回看的声音、文字与现场资料。</p>
         <p class="hero-body">录音、实时转写、同声传译、笔记和会议问答在同一个会话中协作。原始音频和历史记录默认留在设备上，模型由你自己选择。</p>
         <div class="hero-actions">
           <a class="button button-primary" id="hero-download" href="#release">下载最新版</a>
-          <a class="button button-quiet" href="#release">查看版本信息</a>
+          <a class="button button-quiet" href="#install">安装说明</a>
         </div>
         <p class="micro-copy" id="hero-status">正在读取最新版本信息</p>
       </div>
@@ -63,7 +68,7 @@
           <p class="release-notes" id="release-notes">正在读取更新说明……</p>
           <div class="release-actions">
             <a class="button button-primary" id="download-link" href="#" aria-disabled="true">下载公开测试版 APK</a>
-            <a class="button button-outline" id="app-gallery-link" href="#" aria-disabled="true">华为应用市场</a>
+            <a class="button button-outline" id="release-page-link" href="#" aria-disabled="true">查看 Gitee Release</a>
           </div>
           <p class="micro-copy" id="download-status">公开测试版已提供；安装前请核对版本和 SHA-256。</p>
         </article>
@@ -75,6 +80,17 @@
           </dl>
           <p class="hash-value" id="sha256">发布后显示校验值</p>
         </aside>
+      </div>
+      <div class="install-guide" id="install">
+        <div class="install-heading">
+          <p class="eyebrow">FIRST RUN</p>
+          <h3>三步开始测试</h3>
+        </div>
+        <ol class="install-steps">
+          <li><span>01</span><p><strong>下载 APK</strong><br>在 Android 手机上打开上方下载按钮。</p></li>
+          <li><span>02</span><p><strong>允许安装</strong><br>首次安装时，按系统提示允许浏览器或文件管理器安装应用。</p></li>
+          <li><span>03</span><p><strong>保留旧数据</strong><br>更新已有 PAIA 时直接覆盖安装，不要先卸载旧版本。</p></li>
+        </ol>
       </div>
     </section>
 
@@ -111,7 +127,7 @@
       </div>
       <div class="faq-list">
         <details><summary>安装 APK 会不会覆盖掉原来的会话？</summary><p>使用同一 applicationId、同一正式签名并递增 versionCode 的 APK 覆盖安装，不会清除应用私有数据。不要先卸载旧版本。</p></details>
-        <details><summary>这个版本适合日常使用吗？</summary><p>这是公开测试版，使用 Android Debug 签名，适合体验和反馈问题。长时间录音、后台任务和不同设备兼容性仍可能存在问题，请不要在无法容忍数据丢失的场景中依赖它。</p></details>
+        <details><summary>这个版本适合日常使用吗？</summary><p>这是公开测试版，使用 Android Debug 签名，适合体验和反馈问题。长时间录音、后台任务和不同设备兼容性仍可能存在问题，请不要在无法容忍数据丢失的场景中依赖它。正式版会使用长期保管的签名密钥。</p></details>
         <details><summary>没有 VPN 能下载吗？</summary><p>国内发布页和下载附件建议放在 Gitee 或应用市场；GitHub 作为海外镜像。实际发布后请用手机关闭 VPN，分别测试 Wi-Fi 和移动数据。</p></details>
         <details><summary>遇到问题在哪里反馈？</summary><p>请在 Gitee 仓库的 Issue 中附上版本号、设备型号和可复现步骤，不要提交 API Key、录音或照片。</p></details>
       </div>

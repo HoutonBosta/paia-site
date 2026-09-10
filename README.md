@@ -38,7 +38,7 @@ git push
 
 1. 使用正式签名密钥构建 release APK。不要把 debug APK 当作长期公开版本。
 2. 在 Gitee 仓库创建 Release，标签建议使用 `v1.4` 这样的语义化版本，并上传 APK 附件。
-3. 把 Release 附件的直接下载地址、文件大小和 SHA-256 写入 `release.json` 的 `apkUrl`、`apkSize` 和 `sha256`。
+3. 把 Release 附件的直接下载地址、Release 页面地址、文件大小和 SHA-256 写入 `release.json` 的 `apkUrl`、`releasePageUrl`、`apkSize` 和 `sha256`。
 4. 计算 SHA-256 的 PowerShell 示例：
 
 ```powershell

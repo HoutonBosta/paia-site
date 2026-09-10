@@ -10,7 +10,7 @@
     apkUrl: "https://gitee.com/Houton_Bosta/paia-site/releases/download/v1.4-test/PAIA-1.4-test.apk",
     apkSize: 22721220,
     sha256: "bb5a43bf2b950a346ca2667d50d9aa654bade334b90a4e3d0adc57a05d5826ee",
-    appGalleryUrl: "",
+    releasePageUrl: "https://gitee.com/Houton_Bosta/paia-site/releases/tag/v1.4-test",
     repositoryUrl: "https://gitee.com/Houton_Bosta/paia-site"
   };
 
@@ -61,7 +61,7 @@
     $("download-status").textContent = data.apkUrl ? "这是公开测试版；下载前建议核对 SHA-256。" : "发布 APK 后，这里的按钮会自动启用。";
     setLink($("download-link"), data.apkUrl);
     setLink($("hero-download"), data.apkUrl || "#release");
-    setLink($("app-gallery-link"), data.appGalleryUrl);
+    setLink($("release-page-link"), data.releasePageUrl || data.repositoryUrl);
     if (data.sha256) $("copy-hash").disabled = false;
     $("copy-hash").dataset.hash = data.sha256 || "";
     if (data.repositoryUrl) {

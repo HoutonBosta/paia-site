@@ -75,6 +75,7 @@ h3 { margin-bottom: 7px; font-size: 1.08rem; }
 .button-quiet { color: var(--purple); border-color: var(--line); background: var(--panel); }
 .button-quiet:hover { border-color: #cfc6ed; }
 .button[aria-disabled="true"] { opacity: .52; pointer-events: none; }
+.button:focus-visible, a:focus-visible, summary:focus-visible, .hash-button:focus-visible { outline: 3px solid #f0bd3f; outline-offset: 3px; }
 .micro-copy { margin: 11px 0 0; color: var(--muted); font-size: .78rem; }
 .hero-mark { display: grid; justify-items: center; gap: 18px; }
 .hero-mark img { width: min(300px, 70vw); height: auto; border-radius: 58px; box-shadow: var(--shadow); }
@@ -91,6 +92,15 @@ h3 { margin-bottom: 7px; font-size: 1.08rem; }
 .version-line span { color: var(--muted); font-size: .82rem; }
 .release-notes { min-height: 52px; margin-bottom: 24px; color: var(--muted); }
 .release-meta { padding: 27px 28px; border-left: 3px solid var(--gold); background: #fffdf5; }
+.install-guide { margin-top: 24px; padding: 25px 28px 27px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }
+.install-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 20px; }
+.install-heading .eyebrow { margin-bottom: 0; }
+.install-heading h3 { margin: 0; font-size: 1.2rem; }
+.install-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin: 20px 0 0; padding: 0; list-style: none; }
+.install-steps li { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; }
+.install-steps li > span { color: var(--gold); font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: .78rem; font-weight: 800; }
+.install-steps p { margin: 0; color: var(--muted); font-size: .86rem; line-height: 1.55; }
+.install-steps strong { color: var(--ink); font-size: .93rem; }
 .release-meta dl { margin: 0; }
 .release-meta dl > div { display: flex; justify-content: space-between; gap: 18px; padding: 13px 0; border-bottom: 1px solid #eee8d6; }
 .release-meta dl > div:last-child { border-bottom: 0; }
@@ -143,12 +153,16 @@ code { padding: 2px 5px; color: var(--purple-deep); background: var(--purple-sof
   .site-header, .hero, .release-section, .feature-section, .principles-section, .faq-section, .site-footer { width: min(100% - 28px, 1180px); }
   .site-header { min-height: 64px; }
   .brand img { width: 30px; height: 30px; }
-  .site-nav { margin-left: auto; font-size: .82rem; }
-  .site-nav a:nth-child(3), .site-nav a:nth-child(4) { display: none; }
+  .site-nav { margin-left: auto; gap: 10px; font-size: .78rem; }
+  .site-nav a { white-space: nowrap; }
   .hero { padding-top: 52px; }
   h1 { font-size: 4.4rem; }
   .release-panel { padding: 23px 20px; }
   .release-meta { padding: 20px; }
+  .install-guide { padding: 22px 20px; }
+  .install-heading { display: block; }
+  .install-heading h3 { margin-top: 6px; }
+  .install-steps { grid-template-columns: 1fr; gap: 15px; margin-top: 17px; }
   .feature-item { min-height: 210px; padding-right: 14px; }
   .feature-item + .feature-item { padding-left: 14px; }
   .feature-item:nth-child(3) { padding-left: 0; }
