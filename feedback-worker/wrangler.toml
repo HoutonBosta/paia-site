@@ -4,4 +4,5 @@ compatibility_date = "2026-09-10"
 
 [vars]
 GITEE_OWNER = "Houton_Bosta"
-GITEE_REPO = "paia-site"
+GITEE_FEEDBACK_REPO = "paia-feedback"
+GITEE_BRANCH = "master"

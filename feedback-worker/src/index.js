@@ -20,31 +20,46 @@ export default {
     const message = String(payload?.message || "").trim();
     if (!message || message.length > 8000) return json({ error: "Invalid feedback" }, 400);
 
-    const title = message.split(/\r?\n/, 1)[0].slice(0, 50) || "PAIA user feedback";
-    const description = [
+    const requestId = String(
+      payload?.requestId || request.headers.get("Idempotency-Key") || crypto.randomUUID(),
+    ).replace(/[^a-zA-Z0-9_-]/g, "_").slice(0, 80);
+    const receivedAt = new Date().toISOString();
+    const date = receivedAt.slice(0, 10);
+    const path = "feedback/" + date + "/" + requestId + ".json";
+    const storedFeedback = JSON.stringify({
+      requestId,
+      receivedAt,
       message,
-      "",
-      "---",
-      "PAIA " + (payload?.versionName || "unknown") + " (" + (payload?.versionCode || "unknown") + ")",
-      (payload?.manufacturer || "") + " " + (payload?.model || "") + " / Android " + (payload?.androidVersion || ""),
-      "Language: " + (payload?.language || "unknown"),
-      "Request: " + (payload?.requestId || request.headers.get("Idempotency-Key") || "unknown"),
-    ].join("\n");
+      app: {
+        versionName: payload?.versionName || "unknown",
+        versionCode: payload?.versionCode || "unknown",
+        language: payload?.language || "unknown",
+      },
+      device: {
+        manufacturer: payload?.manufacturer || "",
+        model: payload?.model || "",
+        androidVersion: payload?.androidVersion || "",
+      },
+    }, null, 2);
 
     const form = new URLSearchParams({
       access_token: env.GITEE_TOKEN,
-      repo: env.GITEE_REPO,
-      title,
-      body: description,
+      content: btoa(unescape(encodeURIComponent(storedFeedback))),
+      message: "Store PAIA feedback " + requestId,
+      branch: env.GITEE_BRANCH || "main",
     });
-    const response = await fetch("https://gitee.com/api/v5/repos/" + env.GITEE_OWNER + "/issues", {
+    const repository = env.GITEE_FEEDBACK_REPO || env.GITEE_REPO;
+    if (!env.GITEE_OWNER || !repository) return json({ error: "Feedback repository is not configured" }, 503);
+    const response = await fetch(
+      "https://gitee.com/api/v5/repos/" + env.GITEE_OWNER + "/" + repository + "/contents/" + path,
+      {
       method: "POST",
       headers: { "content-type": "application/x-www-form-urlencoded" },
       body: form,
-    });
+      },
+    );
     const raw = await response.text();
     if (!response.ok) return json({ error: "Gitee returned " + response.status }, 502);
-    const issue = JSON.parse(raw);
-    return json({ ok: true, reference: issue.number ? "Gitee #" + issue.number : null });
+    return json({ ok: true, reference: path });
   },
 };
