@@ -67,3 +67,7 @@ APK 不放进 Git 提交历史；它应作为 Release 附件发布。当前 Gite
 - 检查 Release 页面和 SHA-256 文本是否可访问。
 
 GitHub Pages 是官网托管入口，但不要让 GitHub 成为中国大陆用户唯一的 APK 下载入口。
+
+## 本地接收用户反馈
+
+反馈服务会先把用户提交写入私有 Gitee 仓库 `paia-feedback`。Windows 电脑可以运行 `feedback-receiver\Receive-Feedback.ps1 -Apply`，把反馈归档到本地后删除已经成功保存的远程文件。详细配置和每周任务计划步骤见 [feedback-receiver/README.md](feedback-receiver/README.md)。

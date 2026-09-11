@@ -4,3 +4,7 @@
 *.jks
 .env
 .DS_Store
+.feedback-receiver/config/
+.feedback-receiver/archive/
+feedback-receiver/config/
+feedback-receiver/archive/
