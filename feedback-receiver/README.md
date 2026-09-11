@@ -1,6 +1,6 @@
 # PAIA 本地反馈接收器
 
-这个接收器每次运行会从私有 Gitee 仓库读取 feedback/ 下的 JSON 文件，保存到电脑上的 archive/ 目录。只有本地保存成功后，才会删除对应的 Gitee 文件；网络或写入失败时，远程文件会保留，下一次运行会重试。
+这个接收器每次运行会从私有 Gitee 仓库读取 `feedback/` 下的 JSON 文件，先保存到当前 Windows 用户的本地归档目录。只有本地保存成功且远端文件仍是同一个版本时，才会删除对应的 Gitee 文件；网络或写入失败时，远程文件会保留，下一次运行会重试。
 
 ## 第一次配置
 
@@ -26,7 +26,11 @@
 
     .\Receive-Feedback.ps1 -Apply
 
-归档文件位于 feedback-receiver\archive\日期\请求编号.json。
+归档文件位于 `%LOCALAPPDATA%\PAIA\feedback-receiver\archive\日期\请求编号--GitBlobSHA.json`。运行日志位于同一归档目录的 `receiver-runs.jsonl`。
+
+如果只想保存并校验、不删除 Gitee 文件，可以使用：
+
+    .\Receive-Feedback.ps1 -Apply -ArchiveOnly
 
 ## 每周自动运行
 
@@ -38,20 +42,21 @@
 
     .\Register-FeedbackReceiverTask.ps1 -Hour 22 -Minute 30
 
-脚本会创建当前用户的 Windows 任务计划，不需要管理员权限。任务运行时会执行 Receive-Feedback.ps1 -Apply。任务必须使用保存令牌的同一个 Windows 用户运行。
+任务使用当前用户、仅在该用户登录时运行，并执行 `Receive-Feedback.ps1 -Apply`。任务必须使用保存令牌的同一个 Windows 用户运行。若系统策略禁止当前用户注册任务，请在任务计划程序中手动创建，或用管理员 PowerShell 注册。
 
 如果你希望使用图形界面，也可以在任务计划程序中创建“每周”任务，程序填写 powershell.exe，参数填写：
 
     -NoProfile -ExecutionPolicy Bypass -File "E:\Personal_AI_Assistant\PAIA\website\feedback-receiver\Receive-Feedback.ps1" -Apply
 
-第一次建议手动运行 -Apply，确认文件能落盘后再启用定时任务。
+第一次建议先运行 `-Apply -ArchiveOnly`，确认文件能落盘后再运行 `-Apply` 启用远端清理。
 
 ## 安全说明
 
 - 令牌加密文件位于 %LOCALAPPDATA%\PAIA\feedback-receiver\gitee-token.dpapi，是当前 Windows 用户专属的文件，不要复制到其他电脑。
 - 归档目录位于 %LOCALAPPDATA%\PAIA\feedback-receiver\archive，可能包含用户反馈和设备信息，建议只保存在自己的电脑上。
+- 删除 Gitee 文件只会删除当前分支中的文件，不会自动清除 Git 历史对象占用的空间；若要压缩历史，需要单独规划仓库历史重写和备份，接收器不会自动执行这类高风险操作。
 - 如果令牌泄露，请在 Gitee 撤销并重新运行 Set-FeedbackReceiverSecret.ps1 -Force。
 
 ## 网络入口限制
 
-这个接收器负责读取已经写入 Gitee 的反馈，不负责手机到中转服务的第一跳。当前 PAIA 仍通过 Cloudflare Worker 接收手机反馈；如果手机所在网络无法访问 workers.dev，反馈不会到达 Gitee，接收器也没有可读取的文件。正式发布前应在 Mate 60 的移动数据和 Wi-Fi 下分别测试入口可达性，必要时给 Worker 绑定可访问的自有域名或迁移到国内云函数。
+这个接收器负责读取已经写入 Gitee 的反馈，不负责手机到中转服务的第一跳。当前 PAIA 仍通过 Cloudflare Worker 接收手机反馈；如果手机所在网络无法访问 `workers.dev`，反馈不会到达 Gitee，接收器也没有可读取的文件。正式发布前应在 Mate 60 的移动数据和 Wi-Fi 下分别测试入口可达性，必要时给 Worker 绑定可访问的自有域名或迁移到国内云函数。

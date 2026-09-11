@@ -16,8 +16,14 @@ $action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument $argument
 $triggerTime = [datetime]::Today.AddHours($Hour).AddMinutes($Minute)
 $trigger = New-ScheduledTaskTrigger -Weekly -DaysOfWeek Sunday -At $triggerTime
 $settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -ExecutionTimeLimit (New-TimeSpan -Minutes 15)
+$principal = New-ScheduledTaskPrincipal -UserId ([System.Security.Principal.WindowsIdentity]::GetCurrent().Name) -LogonType Interactive -RunLevel Limited
 
-Register-ScheduledTask -TaskName $TaskName -Action $action -Trigger $trigger -Settings $settings -Description "每周归档 PAIA 用户反馈到本机并清理已归档的 Gitee 文件。" -Force | Out-Null
+try {
+    Register-ScheduledTask -TaskName $TaskName -Action $action -Trigger $trigger -Settings $settings -Principal $principal -Description "每周归档 PAIA 用户反馈到本机并清理已归档的 Gitee 文件。" -Force -ErrorAction Stop | Out-Null
+    Get-ScheduledTask -TaskName $TaskName -ErrorAction Stop | Out-Null
+} catch {
+    throw "任务注册失败：$($_.Exception.Message)。如果当前账户被策略限制，请在任务计划程序中选择仅当用户登录时运行。"
+}
 
 Write-Host "已注册每周任务：$TaskName（每周日 $($Hour.ToString('00')):$($Minute.ToString('00'))）"
 Write-Host "任务使用当前 Windows 用户运行；请确保该用户已经运行 Set-FeedbackReceiverSecret.ps1。"
