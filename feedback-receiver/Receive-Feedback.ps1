@@ -1,165 +1,183 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param(
     [switch]$Apply,
-    [string]$ArchiveRoot = (Join-Path $PSScriptRoot "archive")
+    [switch]$ArchiveOnly,
+    [string]$ArchiveRoot = (Join-Path ([Environment]::GetFolderPath("LocalApplicationData")) "PAIA\feedback-receiver\archive")
 )
 
+Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
-
-$Owner = "Houton_Bosta"
-$Repository = "paia-feedback"
-$Branch = "master"
-$ApiRoot = "https://gitee.com/api/v5/repos/$Owner/$Repository"
-$TokenPath = Join-Path $PSScriptRoot "config\gitee-token.dpapi"
+$script:ApiRoot = "https://gitee.com/api/v5/repos/Houton_Bosta/paia-feedback"
+$script:Branch = "master"
+$script:TokenPath = Join-Path ([Environment]::GetFolderPath("LocalApplicationData")) "PAIA\feedback-receiver\gitee-token.dpapi"
+$script:ArchiveRoot = [IO.Path]::GetFullPath($ArchiveRoot)
+$script:MaxFeedbackBytes = 1048576
+$script:AccessToken = $null
 
 function Get-AccessToken {
-    if (-not (Test-Path -LiteralPath $TokenPath -PathType Leaf)) {
-        throw "未找到 Gitee 令牌。请先运行 Set-FeedbackReceiverSecret.ps1。"
-    }
-
-    $encrypted = (Get-Content -LiteralPath $TokenPath -Raw).Trim()
-    if ([string]::IsNullOrWhiteSpace($encrypted)) {
-        throw "Gitee 令牌文件为空，请重新运行 Set-FeedbackReceiverSecret.ps1。"
-    }
-
+    if (-not (Test-Path -LiteralPath $script:TokenPath -PathType Leaf)) { throw "Run Set-FeedbackReceiverSecret.ps1 before receiving feedback." }
     try {
+        $encrypted = [IO.File]::ReadAllText($script:TokenPath).Trim()
         $secure = ConvertTo-SecureString -String $encrypted
-        return [System.Net.NetworkCredential]::new("", $secure).Password
-    } catch {
-        throw "无法解密 Gitee 令牌。请使用保存令牌的同一个 Windows 用户运行此脚本。"
-    }
+        $token = [Net.NetworkCredential]::new("", $secure).Password
+        if ([string]::IsNullOrWhiteSpace($token)) { throw "empty" }
+        return $token
+    } catch { throw "Cannot decrypt the token. Run under the Windows account that saved it." }
 }
 
-function Invoke-GiteeRequest {
-    param(
-        [Parameter(Mandatory = $true)][ValidateSet("GET", "DELETE")][string]$Method,
-        [Parameter(Mandatory = $true)][string]$Path,
-        [hashtable]$Body
-    )
-
-    $token = Get-AccessToken
-    $separator = if ($Path.Contains("?")) { "&" } else { "?" }
-    $uri = "$ApiRoot/$Path$separator" + "access_token=" + [uri]::EscapeDataString($token)
-
+function Invoke-Gitee {
+    param([ValidateSet("GET", "DELETE")][string]$Method, [string]$Path, [hashtable]$Query = @{})
+    $parameters = @{ access_token = $script:AccessToken }
+    foreach ($key in $Query.Keys) { $parameters[$key] = $Query[$key] }
+    $queryText = ($parameters.GetEnumerator() | ForEach-Object { [uri]::EscapeDataString([string]$_.Key) + "=" + [uri]::EscapeDataString([string]$_.Value) }) -join "&"
+    $uri = $script:ApiRoot + "/" + $Path + "?" + $queryText
     try {
-        if ($Method -eq "DELETE") {
-            return Invoke-RestMethod -Method Delete -Uri $uri -Body $Body -ContentType "application/x-www-form-urlencoded" -Headers @{ Accept = "application/json" }
-        }
-        return Invoke-RestMethod -Method Get -Uri $uri -Headers @{ Accept = "application/json" }
+        return Invoke-RestMethod -Method $Method -Uri $uri -TimeoutSec 30 -Headers @{ Accept = "application/json" } -MaximumRedirection 0
     } catch {
-        throw "Gitee 请求失败（$Method $Path）：$($_.Exception.Message)"
-    }
+        $status = "network error"
+        $response = $_.Exception.PSObject.Properties["Response"]
+        if ($null -ne $response -and $null -ne $response.Value) { $status = "HTTP " + [int]$response.Value.StatusCode }
+        throw "Gitee request failed ($Method $Path; $status). Remote deletion is unconfirmed."
+    } finally { $parameters.Clear(); $uri = $null; $queryText = $null }
 }
 
-function Get-RemoteEntries {
-    param([string]$Path)
-
-    $page = 1
-    $all = @()
-    do {
-        $queryPath = "$Path?ref=$Branch&per_page=100&page=$page"
-        $response = @(Invoke-GiteeRequest -Method GET -Path $queryPath)
-        $all += $response
-        $page++
-    } while ($response.Count -eq 100)
-    return $all
+function Assert-FeedbackEntry {
+    param([object]$Entry)
+    if ($Entry.path -cnotmatch '^feedback/\d{4}-\d{2}-\d{2}/[A-Za-z0-9_-]{1,80}\.json$') { throw "Invalid feedback path." }
+    if ($Entry.sha -cnotmatch '^[0-9a-f]{40}$') { throw "Invalid feedback SHA." }
 }
 
 function Get-FeedbackFiles {
+    $snapshot = Invoke-Gitee -Method GET -Path ("git/trees/" + [uri]::EscapeDataString($script:Branch)) -Query @{ recursive = 1 }
+    if ($null -eq $snapshot.PSObject.Properties["truncated"] -or $snapshot.truncated -ne $false) { throw "Gitee returned an incomplete tree; no files will be deleted." }
+    if ($null -eq $snapshot.PSObject.Properties["tree"]) { throw "Gitee returned an invalid tree." }
+    $seen = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+    foreach ($entry in @($snapshot.tree)) {
+        if ($entry.type -ne "blob" -or -not ([string]$entry.path).StartsWith("feedback/", [StringComparison]::Ordinal)) { continue }
+        if (-not ([string]$entry.path).EndsWith(".json", [StringComparison]::OrdinalIgnoreCase)) { continue }
+        Assert-FeedbackEntry $entry
+        if (-not $seen.Add([string]$entry.path)) { throw "Duplicate or case-colliding feedback paths." }
+        if ([long]$entry.size -gt $script:MaxFeedbackBytes -or [long]$entry.size -lt 1) { throw "Feedback size is outside the archive limit: $($entry.path)" }
+        $entry
+    }
+}
+
+function Assert-NoReparsePoint {
     param([string]$Path)
-
-    foreach ($entry in Get-RemoteEntries -Path $Path) {
-        if ($entry.type -eq "dir") {
-            Get-FeedbackFiles -Path $entry.path
-        } elseif ($entry.type -eq "file" -and $entry.path -like "feedback/*") {
-            $entry
-        }
+    $current = [IO.Path]::GetFullPath($Path)
+    while (-not [string]::IsNullOrEmpty($current)) {
+        $item = Get-Item -LiteralPath $current -Force -ErrorAction SilentlyContinue
+        if ($null -ne $item -and ($item.Attributes -band [IO.FileAttributes]::ReparsePoint)) { throw "Refusing archive path containing a symbolic link or junction." }
+        $parent = [IO.Path]::GetDirectoryName($current)
+        if ($parent -eq $current) { break }
+        $current = $parent
     }
 }
 
-function Get-SafeLocalPath {
-    param([string]$RemotePath)
-
-    if (-not $RemotePath.StartsWith("feedback/")) {
-        throw "拒绝处理反馈目录之外的路径：$RemotePath"
-    }
-
-    $relative = $RemotePath.Substring("feedback/".Length)
-    $segments = $relative -split "/"
-    if ($segments.Count -lt 2 -or ($segments | Where-Object { $_ -eq ".." -or $_ -eq "." -or [string]::IsNullOrWhiteSpace($_) })) {
-        throw "拒绝处理不安全的反馈路径：$RemotePath"
-    }
-
-    $candidate = [System.IO.Path]::GetFullPath((Join-Path $ArchiveRoot ($relative -replace "/", "\")))
-    $root = [System.IO.Path]::GetFullPath($ArchiveRoot).TrimEnd("\") + "\"
-    if (-not $candidate.StartsWith($root, [System.StringComparison]::OrdinalIgnoreCase)) {
-        throw "反馈路径越过本地归档目录：$RemotePath"
-    }
-    return $candidate
-}
-
-function Save-RemoteFeedback {
+function Get-LocalPath {
     param([object]$Entry)
-
-    $target = Get-SafeLocalPath -RemotePath $Entry.path
-    $parent = Split-Path -Parent $target
-    New-Item -ItemType Directory -Path $parent -Force | Out-Null
-
-    $file = Invoke-GiteeRequest -Method GET -Path "$($Entry.path)?ref=$Branch"
-    if ($file.encoding -ne "base64" -or [string]::IsNullOrWhiteSpace($file.content)) {
-        throw "Gitee 返回的反馈文件不是预期的 base64 内容：$($Entry.path)"
-    }
-
-    $bytes = [Convert]::FromBase64String(($file.content -replace "\s", ""))
-    $temporary = "$target.$([guid]::NewGuid().ToString('N')).tmp"
-    [System.IO.File]::WriteAllBytes($temporary, $bytes)
-    Move-Item -LiteralPath $temporary -Destination $target -Force
+    Assert-FeedbackEntry $Entry
+    $parts = ([string]$Entry.path).Split("/")
+    $id = [IO.Path]::GetFileNameWithoutExtension($parts[2])
+    $relative = Join-Path $parts[1] ($id + "--" + $Entry.sha + ".json")
+    $root = [IO.Path]::GetFullPath($script:ArchiveRoot).TrimEnd([IO.Path]::DirectorySeparatorChar)
+    $target = [IO.Path]::GetFullPath((Join-Path $root $relative))
+    if (-not $target.StartsWith($root + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase)) { throw "Feedback path escapes the archive." }
+    Assert-NoReparsePoint $target
     return $target
 }
 
-function Remove-RemoteFeedback {
-    param([object]$Entry)
-
-    $body = @{
-        sha = [string]$Entry.sha
-        branch = $Branch
-        message = "Archive PAIA feedback $($Entry.name)"
-    }
-    Invoke-GiteeRequest -Method DELETE -Path $Entry.path -Body $body | Out-Null
+function Get-BlobSha {
+    param([byte[]]$Bytes)
+    $header = [Text.Encoding]::ASCII.GetBytes("blob " + $Bytes.Length + [char]0)
+    $sha = [Security.Cryptography.SHA1]::Create()
+    try { [void]$sha.TransformBlock($header, 0, $header.Length, $header, 0); [void]$sha.TransformFinalBlock($Bytes, 0, $Bytes.Length); return ([BitConverter]::ToString($sha.Hash)).Replace("-", "").ToLowerInvariant() } finally { $sha.Dispose() }
 }
 
-if (-not $Apply) {
-    Write-Host "预览模式：不会下载或删除 Gitee 文件。需要实际处理时请加 -Apply。"
-}
-
-$entries = @(Get-FeedbackFiles -Path "feedback")
-if ($entries.Count -eq 0) {
-    Write-Host "Gitee 中没有待处理的反馈。"
-    exit 0
-}
-
-Write-Host "发现 $($entries.Count) 个反馈文件。"
-$failed = 0
-foreach ($entry in $entries) {
-    if (-not $Apply) {
-        Write-Host "待处理：$($entry.path)"
-        continue
-    }
-
+function Assert-FeedbackBytes {
+    param([byte[]]$Bytes, [object]$Entry)
+    if ($Bytes.Length -gt $script:MaxFeedbackBytes -or (Get-BlobSha $Bytes) -ne $Entry.sha) { throw "Feedback hash or size verification failed: $($Entry.path)" }
     try {
-        $saved = Save-RemoteFeedback -Entry $entry
-        Remove-RemoteFeedback -Entry $entry
-        Write-Host "已归档并删除：$($entry.path) -> $saved"
-    } catch {
-        $failed++
-        Write-Warning $_.Exception.Message
+        $payload = ConvertFrom-Json -InputObject ([Text.UTF8Encoding]::new($false, $true).GetString($Bytes))
+        if ($null -eq $payload -or $payload -is [array] -or $null -eq $payload.PSObject.Properties["message"] -or $payload.message -isnot [string] -or [string]::IsNullOrWhiteSpace($payload.message)) { throw "Invalid message" }
+    } catch { throw "Feedback is not a valid UTF-8 JSON feedback object: $($Entry.path)" }
+}
+
+function Get-VerifiedLocalBytes {
+    param([string]$Path, [object]$Entry)
+    Assert-NoReparsePoint $Path
+    $info = Get-Item -LiteralPath $Path -Force
+    if ($info.PSIsContainer -or $info.Length -gt $script:MaxFeedbackBytes) { throw "Invalid local archive file." }
+    $bytes = [IO.File]::ReadAllBytes($Path)
+    Assert-FeedbackBytes $bytes $Entry
+    return ,$bytes
+}
+
+function Save-Feedback {
+    param([object]$Entry)
+    $target = Get-LocalPath $Entry
+    [void][IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($target))
+    Assert-NoReparsePoint $target
+    if (Test-Path -LiteralPath $target) { [void](Get-VerifiedLocalBytes $target $Entry); return $target }
+    $file = Invoke-Gitee -Method GET -Path ("git/blobs/" + $Entry.sha)
+    if ($file.encoding -ne "base64" -or $file.sha -ne $Entry.sha -or [string]::IsNullOrWhiteSpace($file.content) -or $file.content.Length -gt ($script:MaxFeedbackBytes * 2)) { throw "Invalid Gitee blob response: $($Entry.path)" }
+    $bytes = [Convert]::FromBase64String(($file.content -replace "\s", ""))
+    Assert-FeedbackBytes $bytes $Entry
+    $tmp = "$target.$([guid]::NewGuid().ToString('N')).tmp"
+    try {
+        $stream = [IO.File]::Open($tmp, [IO.FileMode]::CreateNew, [IO.FileAccess]::Write, [IO.FileShare]::None)
+        try { $stream.Write($bytes, 0, $bytes.Length); $stream.Flush($true) } finally { $stream.Dispose() }
+        [void](Get-VerifiedLocalBytes $tmp $Entry)
+        Assert-NoReparsePoint $target
+        [IO.File]::Move($tmp, $target)
+        [void](Get-VerifiedLocalBytes $target $Entry)
+    } finally { if ([IO.File]::Exists($tmp)) { [IO.File]::Delete($tmp) } }
+    return $target
+}
+
+function Remove-Feedback {
+    param([object]$Entry)
+    $target = Get-LocalPath $Entry
+    [void](Get-VerifiedLocalBytes $target $Entry)
+    $encodedPath = (($Entry.path -split "/" | ForEach-Object { [uri]::EscapeDataString($_) }) -join "/")
+    $current = Invoke-Gitee -Method GET -Path ("contents/" + $encodedPath) -Query @{ ref = $script:Branch }
+    if ($current.sha -ne $Entry.sha -or $current.path -cne $Entry.path -or $current.type -ne "file") { throw "Remote feedback changed; keeping it for the next run: $($Entry.path)" }
+    [void](Get-VerifiedLocalBytes $target $Entry)
+    Invoke-Gitee -Method DELETE -Path ("contents/" + $encodedPath) -Query @{ sha = $Entry.sha; branch = $script:Branch; message = "Archive PAIA feedback " + [IO.Path]::GetFileName($Entry.path) } | Out-Null
+}
+
+function Invoke-FeedbackReceiver {
+    param([switch]$Apply, [switch]$ArchiveOnly)
+    if ($ArchiveOnly -and -not $Apply) { throw "Use -Apply -ArchiveOnly to archive without deleting." }
+    Assert-NoReparsePoint $script:ArchiveRoot
+    [void][IO.Directory]::CreateDirectory($script:ArchiveRoot)
+    Assert-NoReparsePoint $script:ArchiveRoot
+    $lockPath = Join-Path $script:ArchiveRoot ".lock"
+    Assert-NoReparsePoint $lockPath
+    $lock = [IO.File]::Open($lockPath, [IO.FileMode]::OpenOrCreate, [IO.FileAccess]::ReadWrite, [IO.FileShare]::None)
+    $summary = [ordered]@{ startedAt = [datetime]::UtcNow.ToString("o"); completedAt = $null; mode = "preview"; found = 0; archived = 0; deleted = 0; failed = 0; status = "running" }
+    if ($Apply) { $summary.mode = if ($ArchiveOnly) { "archive-only" } else { "archive-and-delete" } }
+    try {
+        $script:AccessToken = Get-AccessToken
+        $entries = @(Get-FeedbackFiles)
+        $summary.found = $entries.Count
+        foreach ($entry in $entries) {
+            if (-not $Apply) { Write-Host "Preview: $($entry.path)"; continue }
+            try { $saved = Save-Feedback $entry; $summary.archived++; if (-not $ArchiveOnly) { Remove-Feedback $entry; $summary.deleted++ }; Write-Host "Archived: $($entry.path) -> $saved" } catch { $summary.failed++; Write-Warning $_.Exception.Message }
+        }
+        if ($summary.failed -gt 0) { throw "$($summary.failed) feedback items could not be completed. Local archives are retained; failed remote deletions are unconfirmed." }
+        $summary.status = "success"
+    } catch { $summary.status = "failed"; throw }
+    finally {
+        $script:AccessToken = $null
+        $summary.completedAt = [datetime]::UtcNow.ToString("o")
+        try {
+            $logPath = Join-Path $script:ArchiveRoot "receiver-runs.jsonl"
+            Assert-NoReparsePoint $logPath
+            [IO.File]::AppendAllText($logPath, (($summary | ConvertTo-Json -Compress) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+            Write-Host ("Result: " + ($summary | ConvertTo-Json -Compress))
+        } finally { $lock.Dispose() }
     }
 }
 
-if ($failed -gt 0) {
-    throw "$failed 个反馈处理失败。失败文件仍保留在 Gitee，下次运行会重试。"
-}
-
-if ($Apply) {
-    Write-Host "本次反馈归档完成。"
-}
+if ($MyInvocation.InvocationName -ne ".") { Invoke-FeedbackReceiver -Apply:$Apply -ArchiveOnly:$ArchiveOnly }
