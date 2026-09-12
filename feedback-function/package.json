@@ -1,0 +1,11 @@
+{
+  "name": "paia-feedback-function",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Domestic Alibaba Cloud Function Compute relay for PAIA feedback",
+  "main": "index.js",
+  "engines": {
+    "node": ">=18"
+  }
+}
+

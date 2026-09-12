@@ -16,3 +16,9 @@ Store the Gitee personal access token only as the Worker secret
 
 After deployment, set feedbackApiUrl in ../app-config.json to the Worker's
 HTTPS /v1/feedback URL and publish the website repository.
+
+If mainland users cannot reach `workers.dev`, use the sibling
+`../feedback-function` Alibaba Cloud Function Compute template instead. Deploy
+and test that endpoint first, then put it first in the app config's
+`feedbackApiUrls` array while retaining `feedbackApiUrl` for older APKs. Do not
+put the Gitee token in either config file.

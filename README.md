@@ -71,3 +71,5 @@ GitHub Pages 是官网托管入口，但不要让 GitHub 成为中国大陆用�
 ## 本地接收用户反馈
 
 反馈服务会先把用户提交写入私有 Gitee 仓库 `paia-feedback`。Windows 电脑可以运行 `feedback-receiver\Receive-Feedback.ps1 -Apply`，把反馈归档到本地后删除已经成功保存的远程文件。详细配置和每周任务计划步骤见 [feedback-receiver/README.md](feedback-receiver/README.md)。
+
+当前默认中转仍是 Cloudflare Worker。如果中国大陆网络无法访问 `workers.dev`，可按 [feedback-function/README.md](feedback-function/README.md) 部署一个阿里云函数计算境内入口。部署并在关闭 VPN 的手机上验证 `/health` 和一条测试反馈成功后，再把该地址放到 `app-config.json` 的 `feedbackApiUrls` 数组第一项，并保留旧的 `feedbackApiUrl` 字段兼容旧版本 APK。不要把 Gitee 令牌放入网站或 APK。
