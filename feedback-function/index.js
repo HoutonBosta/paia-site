@@ -61,6 +61,34 @@ function requestMethod(req) {
   ).toUpperCase();
 }
 
+function normalizeRequest(request) {
+  let value = request;
+  if (Buffer.isBuffer(value)) value = value.toString("utf8");
+  if (typeof value === "string") {
+    try { value = JSON.parse(value); } catch { return { body: value }; }
+  }
+  if (!value || typeof value !== "object") return {};
+
+  // Some FC HTTP-trigger/event combinations serialize the HTTP event once
+  // more (or nest it under `event`/`request`). Unwrap only when the outer
+  // value does not already look like an HTTP request, so a user payload is
+  // never mistaken for transport metadata.
+  for (let depth = 0; depth < 3; depth += 1) {
+    const looksLikeRequest = value.method || value.httpMethod || value.rawPath ||
+      value.path || value.requestURI || value.requestContext || value.headers ||
+      Object.prototype.hasOwnProperty.call(value, "body");
+    if (looksLikeRequest) break;
+    const nested = value.event ?? value.request ?? value.httpRequest;
+    if (!nested || typeof nested !== "object" && typeof nested !== "string") break;
+    value = nested;
+    if (Buffer.isBuffer(value)) value = value.toString("utf8");
+    if (typeof value === "string") {
+      try { value = JSON.parse(value); } catch { value = { body: value }; }
+    }
+  }
+  return value && typeof value === "object" ? value : {};
+}
+
 async function readBody(req) {
   if (req && Object.prototype.hasOwnProperty.call(req, "body")) {
     const body = req.body;
@@ -192,6 +220,7 @@ async function storeFeedback(env, requestId, payload) {
 }
 
 async function handle(request, resp, env) {
+  request = normalizeRequest(request);
   const method = requestMethod(request);
   const path = requestPath(request);
 
@@ -265,6 +294,7 @@ function contextEnvironment(context) {
 // Support both so an HTTP trigger attached to an event function returns a
 // body instead of the empty 200 response produced by response-only handlers.
 exports.handler = async (request, second, third) => {
+  request = normalizeRequest(request);
   if (isResponseObject(second)) {
     return handle(request, second, { ...process.env, ...contextEnvironment(third) });
   }

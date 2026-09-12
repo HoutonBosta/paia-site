@@ -42,6 +42,29 @@ test("event-function callback receives the HTTP response body", async () => {
   assert.deepEqual(JSON.parse(result.body), { ok: true });
 });
 
+test("serialized HTTP events are normalized before routing", async () => {
+  const result = await handler(JSON.stringify({
+    httpMethod: "POST",
+    rawPath: "/v1/feedback",
+    headers: {},
+    body: JSON.stringify({ message: "test" }),
+  }), {});
+
+  assert.equal(result.statusCode, 503);
+  assert.equal(JSON.parse(result.body).error, "Feedback repository is not configured");
+});
+
+test("nested HTTP events are normalized before routing", async () => {
+  const result = await handler({ event: {
+    requestContext: { http: { method: "POST", path: "/v1/feedback" } },
+    headers: {},
+    body: JSON.stringify({ message: "test" }),
+  } }, {});
+
+  assert.equal(result.statusCode, 503);
+  assert.equal(JSON.parse(result.body).error, "Feedback repository is not configured");
+});
+
 test("base64 event bodies are decoded before JSON parsing", async () => {
   const response = responseRecorder();
   const body = Buffer.from(JSON.stringify({ message: "test" }), "utf8").toString("base64");
