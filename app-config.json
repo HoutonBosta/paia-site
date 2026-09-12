@@ -1,3 +1,7 @@
 {
-  "feedbackApiUrl": "https://paia-feedback.572550696.workers.dev/v1/feedback"
+  "feedbackApiUrl": "https://paia-feedback-pqtmjrrkys.cn-hangzhou.fcapp.run/v1/feedback",
+  "feedbackApiUrls": [
+    "https://paia-feedback-pqtmjrrkys.cn-hangzhou.fcapp.run/v1/feedback",
+    "https://paia-feedback.572550696.workers.dev/v1/feedback"
+  ]
 }
