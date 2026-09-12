@@ -9,31 +9,56 @@ const MAX_BODY_BYTES = 16 * 1024;
 const MAX_MESSAGE_CHARS = 8000;
 const DEFAULT_BRANCH = "master";
 
-function jsonResponse(resp, body, status = 200) {
-  const payload = JSON.stringify(body);
-  if (typeof resp.setStatusCode === "function") resp.setStatusCode(status);
+function responsePayload(body, status = 200, extraHeaders = {}) {
+  return {
+    statusCode: status,
+    headers: {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "no-store",
+      "access-control-allow-origin": "*",
+      ...extraHeaders,
+    },
+    body: JSON.stringify(body),
+    isBase64Encoded: false,
+  };
+}
+
+function writeResponse(resp, payload) {
+  if (!resp) return;
+  if (typeof resp.setStatusCode === "function") resp.setStatusCode(payload.statusCode);
   if (typeof resp.setHeader === "function") {
-    resp.setHeader("content-type", "application/json; charset=utf-8");
-    resp.setHeader("cache-control", "no-store");
-    resp.setHeader("access-control-allow-origin", "*");
+    for (const [name, value] of Object.entries(payload.headers)) resp.setHeader(name, value);
   }
   if (typeof resp.send === "function") {
-    resp.send(payload);
+    resp.send(payload.body);
     return;
   }
   // This branch is useful when the handler is run with a local Node adapter.
-  if (typeof resp.end === "function") resp.end(payload);
+  if (typeof resp.end === "function") resp.end(payload.body);
+}
+
+function jsonResponse(resp, body, status = 200, extraHeaders = {}) {
+  const payload = responsePayload(body, status, extraHeaders);
+  writeResponse(resp, payload);
+  return payload;
 }
 
 function requestPath(req) {
   // FC HTTP triggers expose the path as `path`, while local adapters and
   // Node-compatible runtimes commonly expose a full `url` string.
-  const raw = req?.path || req?.url || "/";
+  const raw = req?.path || req?.rawPath || req?.url || req?.requestURI ||
+    req?.requestContext?.http?.path || req?.requestContext?.path || "/";
   try {
     return new URL(raw, "http://localhost").pathname;
   } catch {
     return "/";
   }
+}
+
+function requestMethod(req) {
+  return String(
+    req?.method || req?.httpMethod || req?.requestContext?.http?.method || "GET",
+  ).toUpperCase();
 }
 
 async function readBody(req) {
@@ -167,72 +192,90 @@ async function storeFeedback(env, requestId, payload) {
 }
 
 async function handle(request, resp, env) {
-  const method = String(request?.method || "GET").toUpperCase();
+  const method = requestMethod(request);
   const path = requestPath(request);
 
   // The Android client does not need CORS, but allowing OPTIONS makes the
   // endpoint easy to probe from the website or an API client.
   if (method === "OPTIONS") {
-    if (typeof resp.setStatusCode === "function") resp.setStatusCode(204);
-    if (typeof resp.setHeader === "function") {
-      resp.setHeader("access-control-allow-origin", "*");
-      resp.setHeader("access-control-allow-methods", "GET, POST, OPTIONS");
-      resp.setHeader("access-control-allow-headers", "content-type, idempotency-key");
-    }
-    if (typeof resp.send === "function") resp.send("");
-    return;
+    return jsonResponse(resp, {}, 204, {
+      "access-control-allow-methods": "GET, POST, OPTIONS",
+      "access-control-allow-headers": "content-type, idempotency-key",
+    });
   }
   if (method === "GET" && (path === "/" || path.endsWith("/health"))) {
-    jsonResponse(resp, { ok: true });
-    return;
+    return jsonResponse(resp, { ok: true });
   }
   if (method !== "POST" || !path.endsWith("/v1/feedback")) {
-    jsonResponse(resp, { error: "Not found" }, 404);
-    return;
+    return jsonResponse(resp, { error: "Not found" }, 404);
   }
 
   const declaredLength = Number(header(request, "content-length") || 0);
   if (declaredLength > MAX_BODY_BYTES) {
-    jsonResponse(resp, { error: "Feedback is too large" }, 413);
-    return;
+    return jsonResponse(resp, { error: "Feedback is too large" }, 413);
   }
   let raw;
   try {
     raw = await readBody(request);
   } catch (error) {
-    jsonResponse(resp, { error: error?.code === "BODY_TOO_LARGE" ? "Feedback is too large" : "Invalid request body" }, error?.code === "BODY_TOO_LARGE" ? 413 : 400);
-    return;
+    return jsonResponse(resp, { error: error?.code === "BODY_TOO_LARGE" ? "Feedback is too large" : "Invalid request body" }, error?.code === "BODY_TOO_LARGE" ? 413 : 400);
   }
   if (Buffer.byteLength(raw, "utf8") > MAX_BODY_BYTES) {
-    jsonResponse(resp, { error: "Feedback is too large" }, 413);
-    return;
+    return jsonResponse(resp, { error: "Feedback is too large" }, 413);
   }
   let payload;
   try { payload = JSON.parse(raw || "{}"); } catch {
-    jsonResponse(resp, { error: "Invalid JSON" }, 400);
-    return;
+    return jsonResponse(resp, { error: "Invalid JSON" }, 400);
   }
   const message = String(payload?.message || "").trim();
   if (!message || message.length > MAX_MESSAGE_CHARS) {
-    jsonResponse(resp, { error: "Invalid feedback" }, 400);
-    return;
+    return jsonResponse(resp, { error: "Invalid feedback" }, 400);
   }
   const requestId = cleanRequestId(payload?.requestId || header(request, "idempotency-key"));
   try {
     const result = await storeFeedback(env, requestId, { ...payload, message });
-    jsonResponse(resp, result, result.status || 200);
+    return jsonResponse(resp, result, result.status || 200);
   } catch (error) {
     // Do not return provider details or environment values to the device.
     console.error("PAIA feedback relay failed", error?.message || "unknown error");
-    jsonResponse(resp, { error: "Feedback relay unavailable" }, 502);
+    return jsonResponse(resp, { error: "Feedback relay unavailable" }, 502);
   }
 }
 
-// Alibaba FC's Node.js HTTP trigger passes (request, response, context).
-exports.handler = (request, response, context) => {
-  const customData = context?.credentials?.customData;
-  const contextEnv = customData && typeof customData === "object" ? customData : {};
-  return handle(request, response, { ...process.env, ...contextEnv });
+function isResponseObject(value) {
+  return Boolean(value) && ["send", "end", "setStatusCode", "setHeader", "writeHead"]
+    .some((name) => typeof value[name] === "function");
+}
+
+function contextEnvironment(context) {
+  const customData = context?.credentials?.customData ?? context?.customData;
+  if (customData && typeof customData === "object") return customData;
+  if (typeof customData === "string") {
+    try {
+      const parsed = JSON.parse(customData);
+      if (parsed && typeof parsed === "object") return parsed;
+    } catch { /* custom data is optional and may be non-JSON */ }
+  }
+  return {};
+}
+
+// Alibaba FC can invoke a Node.js function in either of these forms:
+//   HTTP response adapter: (request, response, context)
+//   Event function:        (event, context, callback)
+// Support both so an HTTP trigger attached to an event function returns a
+// body instead of the empty 200 response produced by response-only handlers.
+exports.handler = async (request, second, third) => {
+  if (isResponseObject(second)) {
+    return handle(request, second, { ...process.env, ...contextEnvironment(third) });
+  }
+
+  const callback = typeof third === "function" ? third : null;
+  const result = await handle(request, null, { ...process.env, ...contextEnvironment(second) });
+  if (callback) {
+    callback(null, result);
+    return;
+  }
+  return result;
 };
 
 // Exported for a small local smoke test without starting a web server.

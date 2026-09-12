@@ -1,7 +1,7 @@
 const assert = require("node:assert/strict");
 const { test } = require("node:test");
 
-const { _handle } = require("./index.js");
+const { _handle, handler } = require("./index.js");
 
 function responseRecorder() {
   return {
@@ -20,6 +20,26 @@ test("health endpoint is available without repository credentials", async () => 
 
   assert.equal(response.statusCode, 200);
   assert.deepEqual(JSON.parse(response.body), { ok: true });
+});
+
+test("event-function invocation returns the HTTP response body", async () => {
+  const result = await handler({ httpMethod: "GET", rawPath: "/health", headers: {} }, {});
+
+  assert.equal(result.statusCode, 200);
+  assert.deepEqual(JSON.parse(result.body), { ok: true });
+  assert.equal(result.isBase64Encoded, false);
+});
+
+test("event-function callback receives the HTTP response body", async () => {
+  const result = await new Promise((resolve, reject) => {
+    handler({ httpMethod: "GET", rawPath: "/health", headers: {} }, {}, (error, response) => {
+      if (error) reject(error);
+      else resolve(response);
+    }).catch(reject);
+  });
+
+  assert.equal(result.statusCode, 200);
+  assert.deepEqual(JSON.parse(result.body), { ok: true });
 });
 
 test("base64 event bodies are decoded before JSON parsing", async () => {
