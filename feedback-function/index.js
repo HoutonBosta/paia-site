@@ -40,10 +40,11 @@ async function readBody(req) {
   if (req && Object.prototype.hasOwnProperty.call(req, "body")) {
     const body = req.body;
     if (body === null || body === undefined) return "";
+    // Event-style adapters expose the encoded payload as a string. Decode it
+    // before the generic string branch so the JSON parser receives JSON.
+    if (req.isBase64Encoded === true) return Buffer.from(String(body), "base64").toString("utf8");
     if (typeof body === "string") return body;
     if (Buffer.isBuffer(body)) return body.toString("utf8");
-    // Some FC adapters expose a base64-encoded HTTP event body.
-    if (req.isBase64Encoded === true) return Buffer.from(String(body), "base64").toString("utf8");
     return JSON.stringify(body);
   }
   if (!req || typeof req.on !== "function") return "";

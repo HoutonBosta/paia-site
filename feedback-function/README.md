@@ -23,6 +23,8 @@
 5. 创建 HTTP 触发器，认证方式选择“匿名”（否则手机无法直接提交），允许 `GET`、`POST`、`OPTIONS`，路径按控制台给出的触发器规则配置。不要把管理 API 令牌放到 URL 或响应中。
 6. 在函数控制台先访问触发器 URL 的 `/health`。返回 `{"ok":true}` 后，再用下面的示例发送一条测试反馈。
 
+上传前可在本目录运行 `npm test`。这只验证请求解析、健康检查和大小限制，不会访问 Gitee，也不能替代部署后的真机网络测试。
+
 ```powershell
 $url = 'https://你的函数触发器域名/v1/feedback'
 $body = @{ requestId = 'manual-test-001'; message = 'PAIA relay smoke test'; versionName = 'local'; versionCode = 0; language = 'zh' } | ConvertTo-Json
@@ -33,7 +35,7 @@ Invoke-RestMethod -Method Post -Uri $url -ContentType 'application/json' -Body $
 
 ```json
 {
-  "feedbackApiUrl": "https://paia-feedback.572550696.workers.dev/v1/feedback",
+  "feedbackApiUrl": "https://你的函数触发器域名/v1/feedback",
   "feedbackApiUrls": [
     "https://你的函数触发器域名/v1/feedback",
     "https://paia-feedback.572550696.workers.dev/v1/feedback"
@@ -41,7 +43,7 @@ Invoke-RestMethod -Method Post -Uri $url -ContentType 'application/json' -Body $
 }
 ```
 
-提交网站配置后，新版本会按数组顺序尝试入口；连接超时或 5xx 时自动切换到下一入口，并沿用同一个请求编号。旧 APK 只读取 `feedbackApiUrl`，因此在删除或确认 Cloudflare 入口前不要移除该字段。
+提交网站配置后，包含多入口逻辑的新构建会按数组顺序尝试入口；连接超时或 5xx 时自动切换到下一入口，并沿用同一个请求编号。已经发布且只读取 `feedbackApiUrl` 的 APK 不会使用该数组，所以旧字段的键必须保留、值也应改为已验证的境内入口。
 
 ## 网络与安全边界
 
@@ -49,4 +51,4 @@ Invoke-RestMethod -Method Post -Uri $url -ContentType 'application/json' -Body $
 - FC 匿名触发器只暴露反馈写入接口，不暴露 Gitee 令牌。函数对消息大小、JSON 格式和请求编号做校验，并对重复请求返回同一个引用。
 - 如需更稳定的固定域名，可在函数计算控制台绑定备案域名；这不是本模板的必要条件。
 - 本地接收器仍从 Gitee 私有仓库读取反馈，部署中转服务不会改变接收器的使用方式。
-
+- 匿名入口可能被滥用。正式扩大测试范围前，应在阿里云侧设置费用告警、并发上限和访问日志；不要依赖 APK 内置密钥作为防滥用措施。
