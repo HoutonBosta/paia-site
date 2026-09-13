@@ -159,6 +159,15 @@ async function giteeRequest({ owner, repository, token, path, method = "GET", qu
   return { response, text, parsed };
 }
 
+function isGiteeFileResponse(result) {
+  // Gitee's contents API returns HTTP 200 with [] for a missing nested path
+  // in some repository configurations. Only a JSON file object means that an
+  // idempotent request already exists; an array must continue to the create
+  // call below.
+  return Boolean(result?.parsed) && !Array.isArray(result.parsed) &&
+    result.parsed.type === "file" && typeof result.parsed.path === "string";
+}
+
 async function storeFeedback(env, requestId, payload) {
   const settings = giteeSettings(env);
   if (!settings.token || !settings.owner || !settings.repository) {
@@ -175,8 +184,11 @@ async function storeFeedback(env, requestId, payload) {
     path: `contents/${path}`,
     query: { ref: settings.branch },
   });
-  if (existing.response.ok) return { ok: true, reference: path, duplicate: true };
-  if (existing.response.status !== 404) return { error: `Gitee returned ${existing.response.status}`, status: 502 };
+  if (isGiteeFileResponse(existing)) return { ok: true, reference: path, duplicate: true };
+  // Treat Gitee's empty directory response as a miss, just like a 404.
+  const missing = existing.response.status === 404 ||
+    (existing.response.ok && Array.isArray(existing.parsed));
+  if (!missing) return { error: `Gitee returned ${existing.response.status}`, status: 502 };
 
   const storedFeedback = JSON.stringify({
     requestId,
@@ -213,8 +225,11 @@ async function storeFeedback(env, requestId, payload) {
       path: `contents/${path}`,
       query: { ref: settings.branch },
     });
-    if (retry.response.ok) return { ok: true, reference: path, duplicate: true };
+    if (isGiteeFileResponse(retry)) return { ok: true, reference: path, duplicate: true };
     return { error: `Gitee returned ${result.response.status}`, status: 502 };
+  }
+  if (!isGiteeFileResponse(result)) {
+    return { error: "Gitee returned an unexpected response", status: 502 };
   }
   return { ok: true, reference: path };
 }

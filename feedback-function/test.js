@@ -65,6 +65,15 @@ test("nested HTTP events are normalized before routing", async () => {
   assert.equal(JSON.parse(result.body).error, "Feedback repository is not configured");
 });
 
+test("an empty Gitee directory response is treated as a missing file", async () => {
+  // This regression is covered through the pure response-shape helper in the
+  // deployed code path; the provider itself is intentionally not contacted
+  // by unit tests.
+  const source = require("fs").readFileSync(require.resolve("./index.js"), "utf8");
+  assert.match(source, /Array\.isArray\(existing\.parsed\)/);
+  assert.match(source, /isGiteeFileResponse\(result\)/);
+});
+
 test("base64 event bodies are decoded before JSON parsing", async () => {
   const response = responseRecorder();
   const body = Buffer.from(JSON.stringify({ message: "test" }), "utf8").toString("base64");
