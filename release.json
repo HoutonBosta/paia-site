@@ -5,8 +5,8 @@
   "releaseDate": "2026-09-13",
   "releaseNotes": "修复更新器的断点续传与残留缓存导致的 SHA-256 校验失败：新版本按版本与哈希隔离下载文件，校验失败后强制清理并重新下载。反馈提交继续使用阿里云函数计算境内入口。此 APK 使用 Android Debug 签名，仅用于公开测试。",
   "apkUrl": "https://gitee.com/Houton_Bosta/paia-site/releases/download/v1.6.4-test/PAIA-1.6.4-test.apk",
-  "apkSize": 22855137,
-  "sha256": "e78af471901686aa269ee3843a040fd80b9e0d97f5ece83eee5cfc2bc21e82a4",
+  "apkSize": 23397485,
+  "sha256": "d8e70cd28f704455cc492e9c223de5205c3b96d3b1773f2075db52118ff2a6e3",
   "releasePageUrl": "https://gitee.com/Houton_Bosta/paia-site/releases/tag/v1.6.4-test",
   "repositoryUrl": "https://github.com/HoutonBosta/paia-site"
 }
