@@ -1,62 +1,62 @@
 # PAIA 本地反馈接收器
 
-这个接收器每次运行会从私有 Gitee 仓库读取 `feedback/` 下的 JSON 文件，先保存到当前 Windows 用户的本地归档目录。只有本地保存成功且远端文件仍是同一个版本时，才会删除对应的 Gitee 文件；网络或写入失败时，远程文件会保留，下一次运行会重试。
+接收器从 Gitee 私有反馈仓库读取 `feedback/` 下的 JSON 文件，先保存到当前 Windows 用户的本地归档目录；只有本地文件通过校验后，才删除远端对应文件。网络、校验或写入失败时，远端文件会保留，下一次运行可重试。
 
-## 第一次配置
+## 配置令牌
 
-在 PowerShell 中进入这个目录：
+在 PowerShell 中运行：
 
-    Set-Location 'E:\Personal_AI_Assistant\PAIA\website\feedback-receiver'
+```powershell
+.\Set-FeedbackReceiverSecret.ps1
+```
 
-用当前 Windows 用户保存 Gitee 令牌。令牌不会写进脚本，也不会提交到 Git：
+按提示输入对反馈仓库具有读写权限的 Gitee 访问令牌。脚本使用 Windows DPAPI 加密，令牌只对保存它的 Windows 用户可解密，不会写入脚本或 Git。已有 Git Credential Manager 凭据时，也可使用：
 
-    .\Set-FeedbackReceiverSecret.ps1
+```powershell
+.\Set-FeedbackReceiverSecret.ps1 -FromGitCredentialManager
+```
 
-按提示粘贴一个对私有仓库 Houton_Bosta/paia-feedback 有读写权限的 Gitee 令牌。令牌会写入 Windows 本地应用数据目录，只有同一个 Windows 用户能够解密。若这台电脑已用 Git Credential Manager 保存 Gitee 令牌，也可以运行：
+仓库所有者、仓库名和分支在 `Receive-Feedback.ps1` 中配置；部署到其他仓库前应同步修改并进行代码审查。
 
-    .\Set-FeedbackReceiverSecret.ps1 -FromGitCredentialManager
+## 运行模式
 
-## 手动测试
+预览待处理文件，不修改远端：
 
-先用预览模式检查待处理文件，不会修改 Gitee：
+```powershell
+.\Receive-Feedback.ps1
+```
 
-    .\Receive-Feedback.ps1
+归档并删除已验证的远端文件：
 
-确认无误后执行归档和清理：
+```powershell
+.\Receive-Feedback.ps1 -Apply
+```
 
-    .\Receive-Feedback.ps1 -Apply
+只归档、不删除远端文件：
 
-归档文件位于 `%LOCALAPPDATA%\PAIA\feedback-receiver\archive\日期\请求编号--GitBlobSHA.json`。运行日志位于同一归档目录的 `receiver-runs.jsonl`。
+```powershell
+.\Receive-Feedback.ps1 -Apply -ArchiveOnly
+```
 
-如果只想保存并校验、不删除 Gitee 文件，可以使用：
+默认归档位置为 `%LOCALAPPDATA%\PAIA\feedback-receiver\archive`，按日期保存文件，并在同一目录写入 `receiver-runs.jsonl` 运行摘要。可通过 `-ArchiveRoot` 指定其他目录。
 
-    .\Receive-Feedback.ps1 -Apply -ArchiveOnly
+接收器会校验路径格式、Blob SHA、UTF-8 JSON、反馈消息和文件大小，并拒绝符号链接或目录穿越路径。删除前还会重新读取远端 SHA，避免覆盖并发更新。
 
-## 每周自动运行
+## 计划任务
 
-推荐直接运行下面的命令，建立当前 Windows 用户每周日 03:00 执行的任务：
+使用当前 Windows 用户注册每周日任务（默认 03:00）：
 
-    .\Register-FeedbackReceiverTask.ps1
+```powershell
+.\Register-FeedbackReceiverTask.ps1
+```
 
-也可以指定时间，例如每周日 22:30：
-
-    .\Register-FeedbackReceiverTask.ps1 -Hour 22 -Minute 30
-
-任务使用当前用户、仅在该用户登录时运行，并执行 `Receive-Feedback.ps1 -Apply`。任务必须使用保存令牌的同一个 Windows 用户运行。若系统策略禁止当前用户注册任务，请在任务计划程序中手动创建，或用管理员 PowerShell 注册。
-
-如果你希望使用图形界面，也可以在任务计划程序中创建“每周”任务，程序填写 powershell.exe，参数填写：
-
-    -NoProfile -ExecutionPolicy Bypass -File "E:\Personal_AI_Assistant\PAIA\website\feedback-receiver\Receive-Feedback.ps1" -Apply
-
-第一次建议先运行 `-Apply -ArchiveOnly`，确认文件能落盘后再运行 `-Apply` 启用远端清理。
+可用 `-Hour` 和 `-Minute` 指定时间。任务必须由保存令牌的同一用户运行，并要求该用户能够访问网络和本地归档目录。首次启用自动删除前，建议先运行 `-Apply -ArchiveOnly` 检查归档结果。
 
 ## 安全说明
 
-- 令牌加密文件位于 %LOCALAPPDATA%\PAIA\feedback-receiver\gitee-token.dpapi，是当前 Windows 用户专属的文件，不要复制到其他电脑。
-- 归档目录位于 %LOCALAPPDATA%\PAIA\feedback-receiver\archive，可能包含用户反馈和设备信息，建议只保存在自己的电脑上。
-- 删除 Gitee 文件只会删除当前分支中的文件，不会自动清除 Git 历史对象占用的空间；若要压缩历史，需要单独规划仓库历史重写和备份，接收器不会自动执行这类高风险操作。
-- 如果令牌泄露，请在 Gitee 撤销并重新运行 Set-FeedbackReceiverSecret.ps1 -Force。
+- 令牌文件和归档目录可能包含敏感反馈及设备诊断信息，只应保存在受控计算机上。
+- 不要将令牌、归档文件或运行日志提交到代码仓库或发送到公开渠道。
+- 删除远端文件不会自动清除 Git 历史对象；历史清理属于单独的仓库维护操作，接收器不会执行。
+- 令牌疑似泄露时，应立即在 Gitee 撤销并重新运行 `Set-FeedbackReceiverSecret.ps1 -Force`。
 
-## 网络入口限制
-
-这个接收器负责读取已经写入 Gitee 的反馈，不负责手机到中转服务的第一跳。当前 PAIA 仍通过 Cloudflare Worker 接收手机反馈；如果手机所在网络无法访问 `workers.dev`，反馈不会到达 Gitee，接收器也没有可读取的文件。正式发布前应在 Mate 60 的移动数据和 Wi-Fi 下分别测试入口可达性，必要时给 Worker 绑定可访问的自有域名或迁移到国内云函数。
+接收器只负责从 Gitee 归档反馈，不负责 Android 应用到 API 入口的网络传输。入口部署请参见 [feedback-function](../feedback-function/README.md)；备用 Worker 请参见 [feedback-worker](../feedback-worker/README.md)。

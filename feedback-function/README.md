@@ -1,54 +1,76 @@
-# 阿里云函数计算反馈中转（境内入口）
+# 阿里云函数计算反馈入口
 
-当前 PAIA 的反馈链路是：手机 -> Cloudflare Worker -> Gitee。中国大陆网络可能无法稳定访问 `workers.dev`，所以手机能读取 Gitee 上的配置，却在提交反馈时超时。本目录提供一个同等功能的阿里云函数计算（FC）Node.js 模板，部署在中国大陆地域后可以作为境内 HTTPS 入口。
+本目录提供 Node.js 18+ 的阿里云函数计算（FC）模板，将 Android 应用提交的反馈写入 Gitee 私有仓库。它是 PAIA 的默认境内入口。
 
-## 部署前提
+```text
+Android 应用 -> FC HTTP 触发器 -> Gitee Contents API -> feedback/YYYY-MM-DD/<requestId>.json
+```
 
-- 一个阿里云账号和已开通的函数计算服务。
-- 选择中国大陆地域（例如杭州、上海或北京），以控制台实际可选地域为准。
-- Gitee 私有仓库 `Houton_Bosta/paia-feedback` 的个人访问令牌。令牌只保存到函数计算的环境变量 `GITEE_TOKEN`，不要写入本目录、Gitee 网站仓库或 APK。
+## 部署要求
 
-## 控制台部署
+- 阿里云账号及已开通的函数计算服务，选择可用的中国大陆地域。
+- 一个用于存储反馈的 Gitee 私有仓库。
+- 对该仓库具有写入权限的 Gitee 访问令牌。令牌只放在 FC 环境变量中。
 
-1. 打开阿里云函数计算控制台，创建服务，例如 `paia-feedback`。服务不需要绑定公网 IP。
-2. 创建函数，运行时选择 Node.js 18（或更高的 Node.js 运行时），请求处理程序填写 `index.handler`。
-3. 将本目录中的 `index.js` 和 `package.json` 打包上传。模板只用 Node.js 内置模块，不需要安装依赖。
-4. 在“环境变量”中填写：
+## 控制台配置
 
-   - `GITEE_OWNER` = `Houton_Bosta`
-   - `GITEE_FEEDBACK_REPO` = `paia-feedback`
-   - `GITEE_BRANCH` = `master`
-   - `GITEE_TOKEN` = 你的 Gitee 令牌（只在控制台填写）
+1. 创建函数计算服务和函数，运行时选择 Node.js 18 或更高版本，处理程序为 `index.handler`。
+2. 上传本目录的 `index.js` 和 `package.json`。模板仅使用 Node.js 内置模块，无需安装依赖。
+3. 配置以下环境变量：
 
-5. 创建 HTTP 触发器，认证方式选择“匿名”（否则手机无法直接提交），允许 `GET`、`POST`、`OPTIONS`，路径按控制台给出的触发器规则配置。不要把管理 API 令牌放到 URL 或响应中。
-6. 在函数控制台先访问触发器 URL 的 `/health`。返回 `{"ok":true}` 后，再用下面的示例发送一条测试反馈。
+   | 变量 | 说明 |
+   | --- | --- |
+   | `GITEE_OWNER` | Gitee 仓库所属组织或用户（例如 `your-owner`） |
+   | `GITEE_FEEDBACK_REPO` | 私有反馈仓库名 |
+   | `GITEE_BRANCH` | 目标分支，未设置时默认为 `master` |
+   | `GITEE_TOKEN` | Gitee 访问令牌，仅在 FC 密钥配置中填写 |
 
-上传前可在本目录运行 `npm test`。这只验证请求解析、健康检查和大小限制，不会访问 Gitee，也不能替代部署后的真机网络测试。
+4. 创建 HTTP 触发器，允许匿名访问，并启用 `GET`、`POST`、`OPTIONS`。手机端使用触发器提供的 HTTPS 地址，不要把令牌放入 URL。
+5. 访问 `<trigger-url>/health`，确认返回 `{"ok":true}`。
+
+上传前可运行 `npm test` 进行本地请求解析测试；该测试不访问 Gitee，也不代表云端网络验证完成。
+
+## API
+
+- `GET /health`：健康检查。
+- `POST /v1/feedback`：接收 JSON 反馈。
+- `OPTIONS`：CORS 预检。
+
+请求示例：
 
 ```powershell
-$url = 'https://你的函数触发器域名/v1/feedback'
-$body = @{ requestId = 'manual-test-001'; message = 'PAIA relay smoke test'; versionName = 'local'; versionCode = 0; language = 'zh' } | ConvertTo-Json
+$url = 'https://<trigger-host>/v1/feedback'
+$body = @{
+  requestId = 'example-001'
+  message = '反馈内容'
+  versionName = '1.0.0'
+  versionCode = 1
+  language = 'zh'
+} | ConvertTo-Json
 Invoke-RestMethod -Method Post -Uri $url -ContentType 'application/json' -Body $body
 ```
 
-确认私有仓库出现 `feedback/YYYY-MM-DD/manual-test-001.json` 后，再把真实入口加入 `E:\Personal_AI_Assistant\PAIA\website\app-config.json`。为兼容旧版本，保留旧字段，同时把境内入口放在数组第一项：
+请求体最大 16 KiB，`message` 最大 8,000 个字符。服务会清理请求编号、校验 JSON，并对相同编号的重试保持幂等。成功响应包含 `ok: true` 和 Gitee 文件 `reference`；配置缺失或上游失败时返回通用错误，不泄露令牌或内部响应内容。
+
+## 客户端配置
+
+在站点的 `app-config.json` 中，将已验证的 FC 地址放入 `feedbackApiUrls` 首位，并保留 `feedbackApiUrl` 供旧版本客户端读取：
 
 ```json
 {
-  "feedbackApiUrl": "https://你的函数触发器域名/v1/feedback",
+  "feedbackApiUrl": "https://<trigger-host>/v1/feedback",
   "feedbackApiUrls": [
-    "https://你的函数触发器域名/v1/feedback",
-    "https://paia-feedback.572550696.workers.dev/v1/feedback"
+    "https://<trigger-host>/v1/feedback",
+    "https://<worker-host>/v1/feedback"
   ]
 }
 ```
 
-提交网站配置后，包含多入口逻辑的新构建会按数组顺序尝试入口；连接超时或 5xx 时自动切换到下一入口，并沿用同一个请求编号。已经发布且只读取 `feedbackApiUrl` 的 APK 不会使用该数组，所以旧字段的键必须保留、值也应改为已验证的境内入口。
+数组中的备用地址应指向 [feedback-worker](../feedback-worker/README.md) 部署的 Worker。新版本客户端按顺序尝试入口；旧版本只使用 `feedbackApiUrl`。
 
-## 网络与安全边界
+## 安全与运维
 
-- “部署在境内地域”只能提高中国大陆网络的可达性，仍需用 Mate 60 的移动数据和 Wi-Fi 在关闭 VPN 时分别测试；不同运营商、地区和阿里云域名策略可能有差异。
-- FC 匿名触发器只暴露反馈写入接口，不暴露 Gitee 令牌。函数对消息大小、JSON 格式和请求编号做校验，并对重复请求返回同一个引用。
-- 如需更稳定的固定域名，可在函数计算控制台绑定备案域名；这不是本模板的必要条件。
-- 本地接收器仍从 Gitee 私有仓库读取反馈，部署中转服务不会改变接收器的使用方式。
-- 匿名入口可能被滥用。正式扩大测试范围前，应在阿里云侧设置费用告警、并发上限和访问日志；不要依赖 APK 内置密钥作为防滥用措施。
+- 境内部署改善可达性，但仍应从目标网络验证 `/health` 和一次完整反馈提交。
+- 匿名触发器可能被滥用；在阿里云设置费用告警、并发限制、访问日志和必要的限流策略。
+- 不要依赖 APK 中的固定密钥进行鉴权。令牌轮换应在 Gitee 撤销旧令牌后更新 FC 环境变量。
+- FC 只写入指定仓库和分支，不提供反馈读取或仓库管理能力。

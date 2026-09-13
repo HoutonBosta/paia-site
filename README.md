@@ -1,75 +1,61 @@
-# PAIA 发布网站
+# PAIA 发布与反馈服务
 
-这是一个不依赖服务器的纯静态官网。GitHub Pages 用于托管官网和海外镜像，APK 继续通过 Gitee Release 为国内用户提供下载。
+PAIA 是一个 Android 应用项目。本目录是发布站点及反馈服务的公开配置和部署说明。
 
-## GitHub Pages
+## 发布站点
 
-GitHub 仓库：`https://github.com/HoutonBosta/paia-site`
+官网使用 GitHub Pages 托管：
 
-官网地址：`https://houtonbosta.github.io/paia-site/`
+- 仓库：`https://github.com/HoutonBosta/paia-site`
+- 地址：`https://houtonbosta.github.io/paia-site/`
 
-网站从 `main` 分支根目录发布。仓库的 `Settings -> Pages` 应设置为 `Deploy from a branch`、`main`、`/(root)`。
+将 `main` 分支根目录配置为 Pages 发布源。站点只存放公开页面、版本清单和客户端配置，不存放访问令牌、用户反馈或 APK 私钥。
 
-## Gitee 国内镜像
+如需提供国内镜像，可将同一站点内容发布到 Gitee Pages。镜像地址以 Gitee 控制台显示为准；发布镜像不改变反馈服务的安全边界。
 
-建议在 Gitee 新建一个公开、空的仓库，名称使用 `paia-site`。不要在网页端预先勾选初始化 README，这样可以直接推送本目录。
+## 反馈架构
 
-在 PowerShell 中执行：
+默认链路为：
 
-```powershell
-$sitePath = 'E:\Personal_AI_Assistant\PAIA\website'
-Set-Location $sitePath
-git init
-git branch -M main
-git add .
-git commit -m '建立 PAIA 发布网站'
-git remote add origin 'https://gitee.com/Houton_Bosta/paia-site.git'
-git push -u origin main
+```text
+Android 应用 -> 阿里云函数计算（境内 HTTPS 入口） -> Gitee 私有反馈仓库
 ```
 
-执行 `git push` 时，Gitee 会要求在本机完成登录。不要把密码或个人令牌粘贴到聊天窗口。若 Gitee 提示 HTTPS 密码不可用，请在 Gitee 的个人设置中创建访问令牌，并只在自己的终端密码提示处使用。
+Cloudflare Worker 保留为备用入口，用于境外或主入口临时不可用时的故障切换。客户端配置中的 `feedbackApiUrls` 按顺序尝试地址；`feedbackApiUrl` 为旧版本客户端保留的单地址字段。两个字段都只能填写 HTTPS URL，不能包含令牌。
 
-如果已经执行过一次 `git init`，后续更新只需要：
+部署和配置阿里云入口，参见 [feedback-function/README.md](feedback-function/README.md)；配置备用 Worker，参见 [feedback-worker/README.md](feedback-worker/README.md)。本地归档 Gitee 反馈，参见 [feedback-receiver/README.md](feedback-receiver/README.md)。
 
-```powershell
-Set-Location 'E:\Personal_AI_Assistant\PAIA\website'
-git add .
-git commit -m '更新发布页面'
-git push
-```
+## 反馈 API
 
-## 打开 Pages
+入口提供以下接口：
 
-推送完成后，进入 Gitee 仓库的 Pages（有些界面会放在“服务”或“仓库服务”下），选择 `main` 分支和仓库根目录发布。Gitee 会显示实际的网站地址；不同账号和平台政策下入口名称可能变化，以控制台显示为准。
+| 方法 | 路径 | 用途 |
+| --- | --- | --- |
+| `GET` | `/health` | 健康检查，返回 `{"ok":true}` |
+| `POST` | `/v1/feedback` | 接收反馈 JSON 并写入 Gitee |
+| `OPTIONS` | 任意 | 为 API 客户端提供 CORS 预检响应 |
+
+`POST` 请求至少包含非空的 `message` 字段，可附带 `requestId`、`versionName`、`versionCode`、`language` 及设备诊断字段。请求体最大 16 KiB，消息最大 8,000 个字符。服务返回 Gitee 文件引用；相同 `requestId` 的重试返回原引用，不重复创建文件。
 
 ## 发布 APK
 
-1. 使用正式签名密钥构建 release APK。不要把 debug APK 当作长期公开版本。
-2. 在 Gitee 仓库创建 Release，标签建议使用 `v1.4` 这样的语义化版本，并上传 APK 附件。
-3. 把 Release 附件的直接下载地址、Release 页面地址、文件大小和 SHA-256 写入 `release.json` 的 `apkUrl`、`releasePageUrl`、`apkSize` 和 `sha256`。
-4. 计算 SHA-256 的 PowerShell 示例：
+1. 使用受保护的签名配置构建 release APK，不要把签名材料或 debug APK 当作正式版本。
+2. 将 APK 作为 Gitee Release 附件发布，并记录版本号、文件大小和 SHA-256。
+3. 更新根目录 `release.json` 的 `apkUrl`、`releasePageUrl`、`apkSize` 和 `sha256`，再发布站点。
+4. 在发布前从干净网络环境检查站点、版本清单、下载链接和校验值。
+
+示例校验命令（在本地终端执行）：
 
 ```powershell
-(Get-FileHash 'E:\path\to\PAIA-1.4.apk' -Algorithm SHA256).Hash.ToLower()
+(Get-FileHash '.\PAIA-release.apk' -Algorithm SHA256).Hash.ToLower()
 ```
 
-5. 再次提交并推送 `release.json`。网页会自动启用下载按钮。
+APK 应作为 Release 附件管理，不应提交到站点 Git 历史。发布平台的附件大小限制以平台最新文档为准。
 
-APK 不放进 Git 提交历史；它应作为 Release 附件发布。当前 Gitee 帮助文档说明单个 Release 附件不能超过 100 MB，仍应以发布页面的最新限制为准。
+## 安全边界
 
-## 国内访问测试
-
-发布后用 Mate 60 和 MatePad 11 在关闭 VPN 的情况下测试：
-
-- Wi-Fi 打开 Pages 首页；
-- 移动数据打开 Pages 首页；
-- 点击 APK 下载并等待系统安装器；
-- 检查 Release 页面和 SHA-256 文本是否可访问。
-
-GitHub Pages 是官网托管入口，但不要让 GitHub 成为中国大陆用户唯一的 APK 下载入口。
-
-## 本地接收用户反馈
-
-反馈服务会先把用户提交写入私有 Gitee 仓库 `paia-feedback`。Windows 电脑可以运行 `feedback-receiver\Receive-Feedback.ps1 -Apply`，把反馈归档到本地后删除已经成功保存的远程文件。详细配置和每周任务计划步骤见 [feedback-receiver/README.md](feedback-receiver/README.md)。
-
-当前默认中转仍是 Cloudflare Worker。如果中国大陆网络无法访问 `workers.dev`，可按 [feedback-function/README.md](feedback-function/README.md) 部署一个阿里云函数计算境内入口。部署并在关闭 VPN 的手机上验证 `/health` 和一条测试反馈成功后，再把该地址放到 `app-config.json` 的 `feedbackApiUrls` 数组第一项，同时把兼容旧 APK 的 `feedbackApiUrl` 值改为同一个境内入口。多入口数组只对包含相应客户端逻辑的新构建生效。不要把 Gitee 令牌放入网站或 APK。
+- Gitee 反馈仓库必须设为私有；反馈内容可能包含用户意见和设备诊断信息。
+- `GITEE_TOKEN` 只配置在阿里云函数或备用 Worker 的密钥管理中，不写入 Git、站点配置、日志或 APK。
+- 境内入口使用匿名 HTTPS 触发器是客户端直连所需条件，应在云平台设置费用告警、并发上限和访问日志。
+- API 入口只负责写入反馈，不提供 Gitee 仓库浏览、令牌代理或管理接口。
+- 归档工具在本地保存反馈后才删除远端文件；归档目录应按敏感数据处理并限制访问。
