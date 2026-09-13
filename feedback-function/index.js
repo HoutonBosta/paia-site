@@ -164,8 +164,11 @@ function isGiteeFileResponse(result) {
   // in some repository configurations. Only a JSON file object means that an
   // idempotent request already exists; an array must continue to the create
   // call below.
-  return Boolean(result?.parsed) && !Array.isArray(result.parsed) &&
-    result.parsed.type === "file" && typeof result.parsed.path === "string";
+  const parsed = result?.parsed;
+  const file = parsed && !Array.isArray(parsed)
+    ? (parsed.type === "file" ? parsed : parsed.content)
+    : null;
+  return Boolean(file) && file.type === "file" && typeof file.path === "string";
 }
 
 async function storeFeedback(env, requestId, payload) {
@@ -325,3 +328,4 @@ exports.handler = async (request, second, third) => {
 
 // Exported for a small local smoke test without starting a web server.
 exports._handle = handle;
+exports._isGiteeFileResponse = isGiteeFileResponse;

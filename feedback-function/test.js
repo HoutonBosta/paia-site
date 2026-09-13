@@ -1,7 +1,7 @@
 const assert = require("node:assert/strict");
 const { test } = require("node:test");
 
-const { _handle, handler } = require("./index.js");
+const { _handle, _isGiteeFileResponse, handler } = require("./index.js");
 
 function responseRecorder() {
   return {
@@ -66,12 +66,13 @@ test("nested HTTP events are normalized before routing", async () => {
 });
 
 test("an empty Gitee directory response is treated as a missing file", async () => {
-  // This regression is covered through the pure response-shape helper in the
-  // deployed code path; the provider itself is intentionally not contacted
-  // by unit tests.
-  const source = require("fs").readFileSync(require.resolve("./index.js"), "utf8");
-  assert.match(source, /Array\.isArray\(existing\.parsed\)/);
-  assert.match(source, /isGiteeFileResponse\(result\)/);
+  assert.equal(_isGiteeFileResponse({ parsed: [] }), false);
+});
+
+test("Gitee read and create responses both identify a stored file", async () => {
+  const file = { type: "file", path: "feedback/2026-09-13/test.json" };
+  assert.equal(_isGiteeFileResponse({ parsed: file }), true);
+  assert.equal(_isGiteeFileResponse({ parsed: { content: file, commit: {} } }), true);
 });
 
 test("base64 event bodies are decoded before JSON parsing", async () => {
