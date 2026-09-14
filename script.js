@@ -2,15 +2,15 @@
   "use strict";
 
   const fallback = {
-    versionName: "1.4",
-    versionCode: 5,
+    versionName: "1.6.5-test",
+    versionCode: 12,
     minAndroid: "Android 7.0+",
-    releaseDate: "2026-09-09",
-    releaseNotes: "公开测试版：请从 Gitee Release 下载 APK，并在安装前核对 SHA-256。",
-    apkUrl: "https://gitee.com/Houton_Bosta/paia-site/releases/download/v1.4-test/PAIA-1.4-test.apk",
-    apkSize: 22721220,
-    sha256: "bb5a43bf2b950a346ca2667d50d9aa654bade334b90a4e3d0adc57a05d5826ee",
-    releasePageUrl: "https://gitee.com/Houton_Bosta/paia-site/releases/tag/v1.4-test",
+    releaseDate: "2026-09-14",
+    releaseNotes: "百炼 API Key 输入框新增圆圈问号，可直接打开手机申请教程；支持中英文无障碍说明与长按提示。教程涵盖手机浏览器电脑版设置、创建密钥及返回应用保存。打开教程不传输密钥，不修改已输入的配置。沿用原签名，可覆盖升级保留本机数据，请勿先卸载。此 APK 使用 Android Debug 签名，仅用于公开测试。",
+    apkUrl: "https://gitee.com/Houton_Bosta/paia-site/releases/download/v1.6.5-test/PAIA-1.6.5-test.apk",
+    apkSize: 22855137,
+    sha256: "c243a137f0a745a13e58b04da861814319e81df8b811fddf7a81e9e928e60b26",
+    releasePageUrl: "https://gitee.com/Houton_Bosta/paia-site/releases/tag/v1.6.5-test",
     repositoryUrl: "https://github.com/HoutonBosta/paia-site"
   };
 
