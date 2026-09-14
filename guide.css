@@ -52,6 +52,11 @@
 .console-step > p { margin-bottom: 16px; }
 .console-step figure { width: 100%; }
 .api-console-link { font-weight: 650; }
+.step-reference { margin-top: 16px; border-block: 1px solid var(--guide-border); }
+.step-reference > summary { padding: 12px 0; color: var(--guide-accent); cursor: pointer; font-size: 14px; line-height: 1.7; }
+.step-reference > p { font-size: 14px; margin: 0 0 14px; }
+.step-reference > figure { padding-bottom: 16px; }
+.mobile-api-console-link { display: inline-block; padding-block: 10px; }
 .screenshot-step h2, .save-step h2 { display: flex; align-items: center; gap: 10px; font-size: 18px; line-height: 1.5; margin: 0 0 11px; }
 .step-number { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 25px; width: 25px; height: 25px; color: var(--guide-accent); border: 1px solid #d6cde9; border-radius: 50%; font-size: 12px; font-weight: 650; }
 .screenshot-step > p { font-size: 13px; color: var(--muted); line-height: 1.9; min-height: 50px; margin-bottom: 15px; }
