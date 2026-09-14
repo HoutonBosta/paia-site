@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="PAIA 使用教程：在手机浏览器中申请百炼 API Key，完成应用配置，开始录音、实时转写、同声传译、会议问答与笔记。">
+  <meta name="description" content="PAIA 使用教程：优先使用电脑申请百炼 API Key，在手机应用中完成配置，开始录音、实时转写、同声传译、会议问答与笔记。另提供手机申请备用步骤。">
   <meta name="theme-color" content="#5b4ab8">
   <meta name="color-scheme" content="light dark">
   <title>使用教程 | PAIA</title>
@@ -35,9 +35,9 @@
         <div class="directory-heading"><img src="assets/logo-wave-note.svg" alt=""><div><strong>PAIA 使用指南</strong><span>记录、理解与回顾</span></div></div>
         <details open>
           <summary>快速开始</summary>
-          <a href="#get-api-key-mobile" data-chapter="get-api-key-mobile"><span>01</span>手机申请百炼 API Key</a>
+          <a href="#get-api-key" data-chapter="get-api-key"><span>01</span>电脑申请 API Key（推荐）</a>
           <a href="#api-key" data-chapter="api-key"><span>02</span>在应用中填写 API Key</a>
-          <a href="#get-api-key" data-chapter="get-api-key"><span>03</span>电脑申请百炼 API Key</a>
+          <a href="#get-api-key-mobile" data-chapter="get-api-key-mobile"><span>03</span>手机申请 API Key（备用）</a>
           <a href="#connection" data-chapter="connection"><span>04</span>连接验证与业务空间</a>
         </details>
         <details open>
@@ -68,9 +68,91 @@
         <span>更新于 2026.09.14</span>
       </div>
 
+      <article id="get-api-key" class="guide-article" data-group="快速开始" aria-labelledby="title-get-api-key">
+        <header class="article-heading"><p class="article-kicker">快速开始 · 01 · 推荐方案</p><h1 id="title-get-api-key">电脑申请百炼 API Key</h1><p class="article-lead">建议优先使用电脑申请，再将密钥填入手机上的 PAIA。</p></header>
+        <p>电脑浏览器中的百炼控制台更便于查找 API Key 管理入口和完成创建。即使正在手机上阅读，也建议在电脑上打开下方官方链接申请；暂时没有电脑时，可尝试<a href="#get-api-key-mobile">手机申请备用方案</a>。</p>
+        <p>直接打开<a class="api-console-link" href="https://bailian.console.aliyun.com/cn-beijing/model/settings/api-key" target="_blank" rel="noreferrer">阿里云百炼 API Key 管理（北京） ↗</a>，无需从控制台首页逐级查找。API Key 用于验证模型调用身份，调用费用计入所属的阿里云账号。</p>
+        <ol class="path-strip" aria-label="申请路径"><li>登录账号</li><li>创建密钥</li><li>复制并保存</li><li>填入 PAIA</li></ol>
+        <div class="console-steps">
+          <section class="console-step">
+            <h2><span class="step-number">1</span>打开 API Key 页面并登录</h2>
+            <p>打开上方链接后，未登录用户可以点击右上角<strong>“登录”</strong>，或页面中央的<strong>“立即登录”</strong>。已经登录可直接前往第 3 步。</p>
+            <figure><a class="guide-image-link" href="assets/tutorial/bailian-05-login-entry.webp" aria-label="查看大图：百炼登录入口"><img src="assets/tutorial/bailian-05-login-entry.webp" alt="百炼 API Key 管理页面，标注指向右上角登录与页面中央立即登录入口。" width="2556" height="1393" loading="lazy"></a><figcaption>两个登录入口任选其一</figcaption></figure>
+          </section>
+          <section class="console-step">
+            <h2><span class="step-number">2</span>选择登录方式</h2>
+            <p>在弹窗中选择<strong>账号登录、手机号登录或扫码登录</strong>，按页面提示完成验证。没有账号时，点击“前往注册”。首次使用百炼时，按控制台提示完成必要的认证与服务开通。</p>
+            <figure><a class="guide-image-link" href="assets/tutorial/bailian-06-login.webp" aria-label="查看大图：选择阿里云登录方式"><img src="assets/tutorial/bailian-06-login.webp" alt="阿里云登录弹窗，标注账号与手机号登录选项、扫码区域和登录按钮；登录二维码已遮盖。" width="2556" height="1397" loading="lazy"></a><figcaption>仅在阿里云官方页面输入登录信息</figcaption></figure>
+          </section>
+          <section class="console-step">
+            <h2><span class="step-number">3</span>创建 API Key</h2>
+            <p>确认右上角地域为<strong>华北 2（北京）</strong>，左侧选中“API Key”，然后点击右上角<strong>“创建 API-KEY”</strong>。PAIA 本教程使用北京地域接口，其他地域的密钥不能直接混用。</p>
+            <figure><a class="guide-image-link" href="assets/tutorial/bailian-01-api-list.webp" aria-label="查看大图：创建 API Key 入口"><img src="assets/tutorial/bailian-01-api-list.webp" alt="API Key 列表完整页面，标注 API Key 菜单、北京地域与右上角创建 API-KEY 按钮，账号及密钥信息已遮盖。" width="2555" height="1398" loading="lazy"></a><figcaption>若已安全保存可用的完整密钥，可直接在 PAIA 中填写</figcaption></figure>
+          </section>
+          <section class="console-step">
+            <h2><span class="step-number">4</span>填写创建信息</h2>
+            <p>确认<strong>归属业务空间</strong>，个人初次使用通常选择“默认业务空间”；“描述”可填写 <strong>PAIA</strong>，便于之后识别用途。图示权限为“全部”；如采用自定义权限，需要包含应用使用的模型服务。确认后点击右下角<strong>“确定”</strong>。</p>
+            <figure><a class="guide-image-link" href="assets/tutorial/bailian-02-create.webp" aria-label="查看大图：填写 API Key 创建信息"><img src="assets/tutorial/bailian-02-create.webp" alt="创建 API-KEY 弹窗，依次标注归属业务空间、描述、权限与确定按钮。" width="2556" height="1401" loading="lazy"></a><figcaption>团队账号请由管理员确认业务空间与模型权限</figcaption></figure>
+          </section>
+          <section class="console-step">
+            <h2><span class="step-number">5</span>立即复制并妥善保存密钥</h2>
+            <p>创建成功后，在“API 快捷接入”弹窗保留<strong>“手动配置”</strong>，点击 API Key 右侧的<strong>“复制”</strong>。回到 PAIA，将完整密钥粘贴至 <strong>Bailian API Key</strong>。本步骤不需要安装 CLI。</p>
+            <p>在电脑与手机之间传递密钥时，请使用自己可信的设备与传输方式，例如个人密码管理器的安全同步。不要发送到群聊、公开网页或反馈表单；在手机上确认填写成功后，清理不再需要的临时副本。</p>
+            <aside class="guide-note"><strong>新建密钥仅显示一次</strong><p>请在关闭弹窗前复制并妥善保存。按当前控制台提示，离开弹窗后无法再次取回完整密钥。若遗失，应按百炼提示重置或新建，并同步更新应用配置。</p></aside>
+            <figure><a class="guide-image-link" href="assets/tutorial/bailian-03-copy.webp" aria-label="查看大图：复制 API Key"><img src="assets/tutorial/bailian-03-copy.webp" alt="API 快捷接入弹窗，标注只显示一次的提示与复制按钮；完整 API Key 和专属地址均已遮盖。" width="2554" height="1402" loading="lazy"></a><figcaption>图中密钥已遮盖，请使用自己的密钥</figcaption></figure>
+          </section>
+          <section class="console-step">
+            <h2><span class="step-number">6</span>确认创建结果，回到 PAIA 完成配置</h2>
+            <p>返回列表后，可以通过“描述”中的 <strong>PAIA</strong> 找到新建记录。列表用于管理密钥，不代表可以再次查看完整内容。接下来按<a href="#api-key">在应用中填写 API Key</a>完成两项连接测试，滚动到设置页底部并点击<strong>“保存设置”</strong>。</p>
+            <figure><a class="guide-image-link" href="assets/tutorial/bailian-04-created.webp" aria-label="查看大图：API Key 创建结果"><img src="assets/tutorial/bailian-04-created.webp" alt="创建后的 API Key 列表，标注描述为 PAIA 的记录及管理操作区域，私人信息已遮盖。" width="2556" height="554" loading="lazy"></a><figcaption>以 PAIA 描述识别本次创建的密钥</figcaption></figure>
+          </section>
+        </div>
+        <p class="article-footnote">截图保留原有页面范围，仅移除浏览器工具栏并遮盖账号、密钥、专属地址及登录二维码。点击图片可查看大图。百炼界面可能随版本更新，请以实际页面为准。</p>
+        <aside class="guide-note"><strong>费用与额度</strong><p>是否有免费额度、额度期限及模型单价，以百炼账号和<a href="https://help.aliyun.com/zh/model-studio/model-pricing" target="_blank" rel="noreferrer">官方计费说明</a>为准。实时转写、翻译、音频摘要和问答可能分别产生调用费用。</p></aside>
+        <h2>密钥与业务空间 ID 的区别</h2>
+        <div class="table-scroll"><table><thead><tr><th>项目</th><th>用途</th><th>PAIA 中的位置</th></tr></thead><tbody><tr><td>百炼 API Key</td><td>授权访问模型服务</td><td>Bailian API Key</td></tr><tr><td>业务空间 ID</td><td>标识百炼业务空间</td><td>百炼业务空间 ID（同声传译）</td></tr></tbody></table></div>
+        <p>两者不能互相替代，也不应填写阿里云登录密码或 AccessKey ID。完整 API Key 仅填写到 PAIA 设置中，不要发送到反馈、聊天或公开截图中。</p>
+        <div class="source-links"><span>官方参考</span><a href="https://help.aliyun.com/zh/model-studio/get-api-key" target="_blank" rel="noreferrer">获取与配置 API Key ↗</a><a href="https://help.aliyun.com/zh/model-studio/use-workspace" target="_blank" rel="noreferrer">业务空间权限管理 ↗</a></div>
+      </article>
+
+      <article id="api-key" class="guide-article" data-group="快速开始" aria-labelledby="title-api-key">
+        <header class="article-heading"><p class="article-kicker">快速开始 · 02</p><h1 id="title-api-key">在 PAIA 中填写 API Key</h1><p class="article-lead">连接百炼模型服务，开始使用转写、翻译、会议问答与纪要。</p></header>
+        <p>准备好北京地域的百炼 API Key 后，按下列步骤配置。尚未申请密钥，建议先阅读<a href="#get-api-key">电脑申请教程（推荐）</a>；暂时没有电脑时，可尝试<a href="#get-api-key-mobile">手机申请备用方案</a>。GPT 密钥为可选配置，初次使用可以留空。</p>
+        <ol class="path-strip" aria-label="设置路径"><li>打开侧栏</li><li>进入设置</li><li>填写并测试</li><li>保存设置</li></ol>
+        <div class="screenshot-steps">
+          <section class="screenshot-step">
+            <h2><span class="step-number">1</span>打开会话侧栏</h2>
+            <p>在主界面点击左上角的三横线图标，打开会话侧栏。</p>
+            <figure><a class="guide-image-link" href="assets/tutorial/01-open-sidebar.webp" aria-label="查看大图：打开会话侧栏"><img src="assets/tutorial/01-open-sidebar.webp" alt="PAIA 完整主界面，箭头指向左上角的三横线菜单按钮。" width="1216" height="2680" fetchpriority="high"></a><figcaption>主界面左上角</figcaption></figure>
+          </section>
+          <section class="screenshot-step">
+            <h2><span class="step-number">2</span>进入设置</h2>
+            <p>点击侧栏左下角的齿轮图标“设置”，进入配置页面。</p>
+            <figure><a class="guide-image-link" href="assets/tutorial/02-open-settings.webp" aria-label="查看大图：进入设置"><img src="assets/tutorial/02-open-settings.webp" alt="完整会话侧栏，个人会话信息已遮盖，箭头指向左下角的设置按钮。" width="1216" height="2680"></a><figcaption>会话侧栏底部</figcaption></figure>
+          </section>
+          <section class="screenshot-step">
+            <h2><span class="step-number">3</span>粘贴百炼密钥</h2>
+            <p>找到 <strong>Bailian API Key</strong>，粘贴完整密钥，再点击其下方的“测试连接”。这项测试验证实时转写连接。</p>
+            <figure><a class="guide-image-link" href="assets/tutorial/03-bailian-key.webp" aria-label="查看大图：填写百炼密钥并测试"><img src="assets/tutorial/03-bailian-key.webp" alt="完整设置页画面，Bailian API Key 输入内容已遮盖，标注分别指向密钥输入框与测试连接按钮。" width="1216" height="2680" loading="lazy"></a><figcaption>密钥区域已作隐私遮盖</figcaption></figure>
+          </section>
+          <section class="screenshot-step">
+            <h2><span class="step-number">4</span>验证会议模型</h2>
+            <p>继续向下找到“主模型连接”，点击这一项的“测试连接”，验证提问和纪要使用的模型。两项测试需要分别进行。</p>
+            <figure><a class="guide-image-link" href="assets/tutorial/04-test-model.webp" aria-label="查看大图：验证主模型连接"><img src="assets/tutorial/04-test-model.webp" alt="完整主模型与专家模型设置画面，密钥已遮盖，箭头指向主模型的测试连接按钮。" width="1216" height="2680" loading="lazy"></a><figcaption>主模型名称以安装版本显示为准</figcaption></figure>
+          </section>
+        </div>
+        <section class="save-step">
+          <div><h2><span class="step-number">5</span>保存设置</h2><p>滑动到设置页最底部，点击紫色的<strong>“保存设置”</strong>按钮。保存后再回到会话页面。</p><p><strong>测试成功不会代替保存。</strong>直接点击返回，刚填写的配置不会保存。</p></div>
+          <figure><a class="guide-image-link" href="assets/tutorial/api-key-05-save.webp" aria-label="查看大图：保存设置"><img src="assets/tutorial/api-key-05-save.webp" alt="完整设置页底部画面，密钥已遮盖，箭头指向紫色的保存设置按钮。" width="1216" height="2680" loading="lazy"></a><figcaption>设置页最底部</figcaption></figure>
+        </section>
+        <aside class="guide-note"><strong>准备使用同声传译？</strong><p>还需填写与密钥对应的“百炼业务空间 ID（同声传译）”。具体位置见<a href="#connection">连接验证与业务空间</a>。</p></aside>
+        <p class="article-footnote">图示保留通知栏以下的完整手机界面；顶部系统状态栏已裁除，个人会话及密钥信息已遮盖。点击图片可查看整屏，继续点击可放大查看细节。不同版本的界面文字可能略有差异。</p>
+      </article>
+
       <article id="get-api-key-mobile" class="guide-article" data-group="快速开始" aria-labelledby="title-get-api-key-mobile">
-        <header class="article-heading"><p class="article-kicker">快速开始 · 01</p><h1 id="title-get-api-key-mobile">手机申请百炼 API Key</h1><p class="article-lead">先开启浏览器的电脑版网站，再创建密钥并填入 PAIA。</p></header>
-        <p>已经有可用的完整密钥？直接前往<a href="#api-key">在应用中填写 API Key</a>。正在使用电脑？参阅<a href="#get-api-key">电脑申请教程</a>。</p>
+        <header class="article-heading"><p class="article-kicker">快速开始 · 03 · 备用方案</p><h1 id="title-get-api-key-mobile">手机申请百炼 API Key</h1><p class="article-lead">建议优先使用电脑申请；暂时没有电脑时，可尝试以下手机操作。</p></header>
+        <aside class="guide-note computer-first-note"><strong>首选：在电脑上申请，再填入手机应用</strong><p>百炼移动版可能自动进入模型广场，API Key 管理入口与电脑版不同。建议先按<a href="#get-api-key">电脑申请教程</a>创建密钥，再到 PAIA 中填写。下面的手机步骤作为备用方案，能否完成申请取决于浏览器与百炼当前页面。</p></aside>
+        <p>已经有可用的完整密钥？直接前往<a href="#api-key">在应用中填写 API Key</a>，无需重新申请。</p>
         <aside class="guide-note"><strong>打开后进入了“模型广场”？</strong><p>百炼可能将手机浏览器切换到移动版，并在网址末尾加上 <code>#/model-market</code>。这不是密钥失效，也不是需要先购买套餐。请先完成下面第 1 步，再重新打开管理入口。</p></aside>
         <ol class="path-strip" aria-label="手机申请路径"><li>电脑版网站</li><li>登录百炼</li><li>创建并复制</li><li>返回 PAIA</li></ol>
         <div class="console-steps mobile-key-steps">
@@ -121,86 +203,6 @@
         <aside class="guide-note"><strong>费用与隐私</strong><p>模型调用费用计入你的百炼账号，免费额度和单价以<a href="https://help.aliyun.com/zh/model-studio/model-pricing" target="_blank" rel="noreferrer">百炼计费说明</a>为准。PAIA 教程网页不接收密钥；完整 API Key 仅填写在应用设置中。</p></aside>
         <p class="article-footnote">已验证手机浏览器标识会触发模型广场跳转、电脑浏览器标识可进入 API Key 管理页。登录后创建流程以百炼实际界面为准；参考图为电脑版页面，不是手机浏览器菜单截图。</p>
         <div class="source-links"><span>官方参考</span><a href="https://help.aliyun.com/zh/model-studio/get-api-key" target="_blank" rel="noreferrer">获取与配置 API Key ↗</a><a href="#get-api-key">电脑申请教程</a></div>
-      </article>
-
-      <article id="api-key" class="guide-article" data-group="快速开始" aria-labelledby="title-api-key">
-        <header class="article-heading"><p class="article-kicker">快速开始 · 02</p><h1 id="title-api-key">在 PAIA 中填写 API Key</h1><p class="article-lead">连接百炼模型服务，开始使用转写、翻译、会议问答与纪要。</p></header>
-        <p>准备好北京地域的百炼 API Key 后，按下列步骤配置。尚未申请密钥，可先阅读<a href="#get-api-key-mobile">手机申请教程</a>或<a href="#get-api-key">电脑申请教程</a>。GPT 密钥为可选配置，初次使用可以留空。</p>
-        <ol class="path-strip" aria-label="设置路径"><li>打开侧栏</li><li>进入设置</li><li>填写并测试</li><li>保存设置</li></ol>
-        <div class="screenshot-steps">
-          <section class="screenshot-step">
-            <h2><span class="step-number">1</span>打开会话侧栏</h2>
-            <p>在主界面点击左上角的三横线图标，打开会话侧栏。</p>
-            <figure><a class="guide-image-link" href="assets/tutorial/01-open-sidebar.webp" aria-label="查看大图：打开会话侧栏"><img src="assets/tutorial/01-open-sidebar.webp" alt="PAIA 完整主界面，箭头指向左上角的三横线菜单按钮。" width="1216" height="2680" fetchpriority="high"></a><figcaption>主界面左上角</figcaption></figure>
-          </section>
-          <section class="screenshot-step">
-            <h2><span class="step-number">2</span>进入设置</h2>
-            <p>点击侧栏左下角的齿轮图标“设置”，进入配置页面。</p>
-            <figure><a class="guide-image-link" href="assets/tutorial/02-open-settings.webp" aria-label="查看大图：进入设置"><img src="assets/tutorial/02-open-settings.webp" alt="完整会话侧栏，个人会话信息已遮盖，箭头指向左下角的设置按钮。" width="1216" height="2680"></a><figcaption>会话侧栏底部</figcaption></figure>
-          </section>
-          <section class="screenshot-step">
-            <h2><span class="step-number">3</span>粘贴百炼密钥</h2>
-            <p>找到 <strong>Bailian API Key</strong>，粘贴完整密钥，再点击其下方的“测试连接”。这项测试验证实时转写连接。</p>
-            <figure><a class="guide-image-link" href="assets/tutorial/03-bailian-key.webp" aria-label="查看大图：填写百炼密钥并测试"><img src="assets/tutorial/03-bailian-key.webp" alt="完整设置页画面，Bailian API Key 输入内容已遮盖，标注分别指向密钥输入框与测试连接按钮。" width="1216" height="2680" loading="lazy"></a><figcaption>密钥区域已作隐私遮盖</figcaption></figure>
-          </section>
-          <section class="screenshot-step">
-            <h2><span class="step-number">4</span>验证会议模型</h2>
-            <p>继续向下找到“主模型连接”，点击这一项的“测试连接”，验证提问和纪要使用的模型。两项测试需要分别进行。</p>
-            <figure><a class="guide-image-link" href="assets/tutorial/04-test-model.webp" aria-label="查看大图：验证主模型连接"><img src="assets/tutorial/04-test-model.webp" alt="完整主模型与专家模型设置画面，密钥已遮盖，箭头指向主模型的测试连接按钮。" width="1216" height="2680" loading="lazy"></a><figcaption>主模型名称以安装版本显示为准</figcaption></figure>
-          </section>
-        </div>
-        <section class="save-step">
-          <div><h2><span class="step-number">5</span>保存设置</h2><p>滑动到设置页最底部，点击紫色的<strong>“保存设置”</strong>按钮。保存后再回到会话页面。</p><p><strong>测试成功不会代替保存。</strong>直接点击返回，刚填写的配置不会保存。</p></div>
-          <figure><a class="guide-image-link" href="assets/tutorial/api-key-05-save.webp" aria-label="查看大图：保存设置"><img src="assets/tutorial/api-key-05-save.webp" alt="完整设置页底部画面，密钥已遮盖，箭头指向紫色的保存设置按钮。" width="1216" height="2680" loading="lazy"></a><figcaption>设置页最底部</figcaption></figure>
-        </section>
-        <aside class="guide-note"><strong>准备使用同声传译？</strong><p>还需填写与密钥对应的“百炼业务空间 ID（同声传译）”。具体位置见<a href="#connection">连接验证与业务空间</a>。</p></aside>
-        <p class="article-footnote">图示保留通知栏以下的完整手机界面；顶部系统状态栏已裁除，个人会话及密钥信息已遮盖。点击图片可查看整屏，继续点击可放大查看细节。不同版本的界面文字可能略有差异。</p>
-      </article>
-
-      <article id="get-api-key" class="guide-article" data-group="快速开始" aria-labelledby="title-get-api-key">
-        <header class="article-heading"><p class="article-kicker">快速开始 · 03</p><h1 id="title-get-api-key">电脑申请百炼 API Key</h1><p class="article-lead">在阿里云百炼创建自己的模型调用凭证，再将其填入 PAIA。</p></header>
-        <p>正在手机上阅读？请先查看<a href="#get-api-key-mobile">手机申请教程</a>，完成浏览器电脑版设置后再进入百炼。</p>
-        <p>直接打开<a class="api-console-link" href="https://bailian.console.aliyun.com/cn-beijing/model/settings/api-key" target="_blank" rel="noreferrer">阿里云百炼 API Key 管理（北京） ↗</a>，无需从控制台首页逐级查找。API Key 用于验证模型调用身份，调用费用计入所属的阿里云账号。</p>
-        <ol class="path-strip" aria-label="申请路径"><li>登录账号</li><li>创建密钥</li><li>复制并保存</li><li>填入 PAIA</li></ol>
-        <div class="console-steps">
-          <section class="console-step">
-            <h2><span class="step-number">1</span>打开 API Key 页面并登录</h2>
-            <p>打开上方链接后，未登录用户可以点击右上角<strong>“登录”</strong>，或页面中央的<strong>“立即登录”</strong>。已经登录可直接前往第 3 步。</p>
-            <figure><a class="guide-image-link" href="assets/tutorial/bailian-05-login-entry.webp" aria-label="查看大图：百炼登录入口"><img src="assets/tutorial/bailian-05-login-entry.webp" alt="百炼 API Key 管理页面，标注指向右上角登录与页面中央立即登录入口。" width="2556" height="1393" loading="lazy"></a><figcaption>两个登录入口任选其一</figcaption></figure>
-          </section>
-          <section class="console-step">
-            <h2><span class="step-number">2</span>选择登录方式</h2>
-            <p>在弹窗中选择<strong>账号登录、手机号登录或扫码登录</strong>，按页面提示完成验证。没有账号时，点击“前往注册”。首次使用百炼时，按控制台提示完成必要的认证与服务开通。</p>
-            <figure><a class="guide-image-link" href="assets/tutorial/bailian-06-login.webp" aria-label="查看大图：选择阿里云登录方式"><img src="assets/tutorial/bailian-06-login.webp" alt="阿里云登录弹窗，标注账号与手机号登录选项、扫码区域和登录按钮；登录二维码已遮盖。" width="2556" height="1397" loading="lazy"></a><figcaption>仅在阿里云官方页面输入登录信息</figcaption></figure>
-          </section>
-          <section class="console-step">
-            <h2><span class="step-number">3</span>创建 API Key</h2>
-            <p>确认右上角地域为<strong>华北 2（北京）</strong>，左侧选中“API Key”，然后点击右上角<strong>“创建 API-KEY”</strong>。PAIA 本教程使用北京地域接口，其他地域的密钥不能直接混用。</p>
-            <figure><a class="guide-image-link" href="assets/tutorial/bailian-01-api-list.webp" aria-label="查看大图：创建 API Key 入口"><img src="assets/tutorial/bailian-01-api-list.webp" alt="API Key 列表完整页面，标注 API Key 菜单、北京地域与右上角创建 API-KEY 按钮，账号及密钥信息已遮盖。" width="2555" height="1398" loading="lazy"></a><figcaption>若已安全保存可用的完整密钥，可直接在 PAIA 中填写</figcaption></figure>
-          </section>
-          <section class="console-step">
-            <h2><span class="step-number">4</span>填写创建信息</h2>
-            <p>确认<strong>归属业务空间</strong>，个人初次使用通常选择“默认业务空间”；“描述”可填写 <strong>PAIA</strong>，便于之后识别用途。图示权限为“全部”；如采用自定义权限，需要包含应用使用的模型服务。确认后点击右下角<strong>“确定”</strong>。</p>
-            <figure><a class="guide-image-link" href="assets/tutorial/bailian-02-create.webp" aria-label="查看大图：填写 API Key 创建信息"><img src="assets/tutorial/bailian-02-create.webp" alt="创建 API-KEY 弹窗，依次标注归属业务空间、描述、权限与确定按钮。" width="2556" height="1401" loading="lazy"></a><figcaption>团队账号请由管理员确认业务空间与模型权限</figcaption></figure>
-          </section>
-          <section class="console-step">
-            <h2><span class="step-number">5</span>立即复制并妥善保存密钥</h2>
-            <p>创建成功后，在“API 快捷接入”弹窗保留<strong>“手动配置”</strong>，点击 API Key 右侧的<strong>“复制”</strong>。回到 PAIA，将完整密钥粘贴至 <strong>Bailian API Key</strong>。本步骤不需要安装 CLI。</p>
-            <aside class="guide-note"><strong>新建密钥仅显示一次</strong><p>请在关闭弹窗前复制并妥善保存。按当前控制台提示，离开弹窗后无法再次取回完整密钥。若遗失，应按百炼提示重置或新建，并同步更新应用配置。</p></aside>
-            <figure><a class="guide-image-link" href="assets/tutorial/bailian-03-copy.webp" aria-label="查看大图：复制 API Key"><img src="assets/tutorial/bailian-03-copy.webp" alt="API 快捷接入弹窗，标注只显示一次的提示与复制按钮；完整 API Key 和专属地址均已遮盖。" width="2554" height="1402" loading="lazy"></a><figcaption>图中密钥已遮盖，请使用自己的密钥</figcaption></figure>
-          </section>
-          <section class="console-step">
-            <h2><span class="step-number">6</span>确认创建结果，回到 PAIA 完成配置</h2>
-            <p>返回列表后，可以通过“描述”中的 <strong>PAIA</strong> 找到新建记录。列表用于管理密钥，不代表可以再次查看完整内容。接下来按<a href="#api-key">在应用中填写 API Key</a>完成两项连接测试，滚动到设置页底部并点击<strong>“保存设置”</strong>。</p>
-            <figure><a class="guide-image-link" href="assets/tutorial/bailian-04-created.webp" aria-label="查看大图：API Key 创建结果"><img src="assets/tutorial/bailian-04-created.webp" alt="创建后的 API Key 列表，标注描述为 PAIA 的记录及管理操作区域，私人信息已遮盖。" width="2556" height="554" loading="lazy"></a><figcaption>以 PAIA 描述识别本次创建的密钥</figcaption></figure>
-          </section>
-        </div>
-        <p class="article-footnote">截图保留原有页面范围，仅移除浏览器工具栏并遮盖账号、密钥、专属地址及登录二维码。点击图片可查看大图。百炼界面可能随版本更新，请以实际页面为准。</p>
-        <aside class="guide-note"><strong>费用与额度</strong><p>是否有免费额度、额度期限及模型单价，以百炼账号和<a href="https://help.aliyun.com/zh/model-studio/model-pricing" target="_blank" rel="noreferrer">官方计费说明</a>为准。实时转写、翻译、音频摘要和问答可能分别产生调用费用。</p></aside>
-        <h2>密钥与业务空间 ID 的区别</h2>
-        <div class="table-scroll"><table><thead><tr><th>项目</th><th>用途</th><th>PAIA 中的位置</th></tr></thead><tbody><tr><td>百炼 API Key</td><td>授权访问模型服务</td><td>Bailian API Key</td></tr><tr><td>业务空间 ID</td><td>标识百炼业务空间</td><td>百炼业务空间 ID（同声传译）</td></tr></tbody></table></div>
-        <p>两者不能互相替代，也不应填写阿里云登录密码或 AccessKey ID。完整 API Key 仅填写到 PAIA 设置中，不要发送到反馈、聊天或公开截图中。</p>
-        <div class="source-links"><span>官方参考</span><a href="https://help.aliyun.com/zh/model-studio/get-api-key" target="_blank" rel="noreferrer">获取与配置 API Key ↗</a><a href="https://help.aliyun.com/zh/model-studio/use-workspace" target="_blank" rel="noreferrer">业务空间权限管理 ↗</a></div>
       </article>
 
       <article id="connection" class="guide-article" data-group="快速开始" aria-labelledby="title-connection">
