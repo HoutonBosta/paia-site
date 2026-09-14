@@ -9,6 +9,7 @@
   const content = document.getElementById("guide-content");
   const dialog = document.getElementById("image-dialog");
   const expandedImage = document.getElementById("expanded-image");
+  const zoomButton = document.querySelector(".image-dialog-body");
   const mobile = window.matchMedia("(max-width: 860px)");
 
   function setMenu(open) {
@@ -71,12 +72,23 @@
       if (typeof dialog.showModal !== "function" || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
       event.preventDefault();
       const thumbnail = link.querySelector("img");
+      setZoom(false);
       expandedImage.src = link.href;
       expandedImage.alt = thumbnail.alt;
       document.getElementById("image-caption").textContent = link.closest("section").querySelector("h2").textContent;
       dialog.showModal();
       dialog.scrollTop = 0;
     });
+  });
+  function setZoom(zoomed) {
+    zoomButton.setAttribute("aria-pressed", String(zoomed));
+    const label = zoomed ? "查看完整图片" : "放大图片";
+    zoomButton.setAttribute("aria-label", label);
+    zoomButton.title = label;
+  }
+  zoomButton.addEventListener("click", () => {
+    setZoom(zoomButton.getAttribute("aria-pressed") !== "true");
+    dialog.scrollTop = 0;
   });
   dialog.addEventListener("click", event => {
     const bounds = dialog.getBoundingClientRect();
