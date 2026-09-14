@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="PAIA 使用教程：申请并配置百炼 API Key，开始录音、实时转写、同声传译、会议问答与笔记。">
+  <meta name="theme-color" content="#5b4ab8">
+  <meta name="color-scheme" content="light dark">
+  <title>使用教程 | PAIA</title>
+  <link rel="icon" href="assets/logo-wave-note.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="guide.css">
+  <script defer src="guide.js"></script>
+</head>
+<body class="guide-page">
+  <a class="skip-link" href="#guide-content">跳至正文</a>
+  <header class="guide-topbar">
+    <div class="site-header">
+      <a class="brand" href="index.html"><img src="assets/logo-wave-note.svg" alt=""><span>PAIA</span></a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="index.html">首页</a>
+        <a href="guide.html" aria-current="page">使用教程</a>
+        <a href="index.html#release">下载</a>
+      </nav>
+      <a class="text-link header-source" href="https://github.com/HoutonBosta/paia-site" target="_blank" rel="noreferrer">GitHub</a>
+    </div>
+  </header>
+
+  <div class="guide-shell">
+    <aside class="guide-sidebar" aria-label="教程导航">
+      <button class="mobile-directory" type="button" aria-expanded="false" aria-controls="guide-directory" hidden>
+        <span>教程目录</span><span class="menu-symbol" aria-hidden="true"></span>
+      </button>
+      <nav id="guide-directory" class="guide-directory" aria-label="章节目录">
+        <div class="directory-heading"><img src="assets/logo-wave-note.svg" alt=""><div><strong>PAIA 使用指南</strong><span>记录、理解与回顾</span></div></div>
+        <details open>
+          <summary>快速开始</summary>
+          <a href="#api-key" data-chapter="api-key"><span>01</span>在应用中填写 API Key</a>
+          <a href="#get-api-key" data-chapter="get-api-key"><span>02</span>申请百炼 API Key</a>
+          <a href="#connection" data-chapter="connection"><span>03</span>连接验证与业务空间</a>
+        </details>
+        <details open>
+          <summary>录音与协作</summary>
+          <a href="#recording" data-chapter="recording">开始、暂停与继续录音</a>
+          <a href="#transcription" data-chapter="transcription">实时转写与同声传译</a>
+          <a href="#questions-notes" data-chapter="questions-notes">中途提问与现场笔记</a>
+          <a href="#minutes" data-chapter="minutes">生成会议纪要</a>
+        </details>
+        <details open>
+          <summary>资料管理</summary>
+          <a href="#sessions" data-chapter="sessions">历史会话与文件夹</a>
+          <a href="#media" data-chapter="media">照片查看与音频导出</a>
+        </details>
+        <details open>
+          <summary>设置与帮助</summary>
+          <a href="#preferences" data-chapter="preferences">外观与存储设置</a>
+          <a href="#updates" data-chapter="updates">更新与问题反馈</a>
+          <a href="#faq" data-chapter="faq">常见问题</a>
+        </details>
+        <a class="directory-footer" href="privacy.html">隐私说明 <span aria-hidden="true">↗</span></a>
+      </nav>
+    </aside>
+
+    <main id="guide-content" class="guide-content" tabindex="-1">
+      <div class="reading-toolbar">
+        <span id="chapter-location">使用教程 / 快速开始</span>
+        <span>更新于 2026.09.14</span>
+      </div>
+
+      <article id="api-key" class="guide-article" data-group="快速开始" aria-labelledby="title-api-key">
+        <header class="article-heading"><p class="article-kicker">快速开始 · 01</p><h1 id="title-api-key">在 PAIA 中填写 API Key</h1><p class="article-lead">连接百炼模型服务，开始使用转写、翻译、会议问答与纪要。</p></header>
+        <p>准备好北京地域的百炼 API Key 后，按下列步骤配置。尚未申请密钥，可先阅读<a href="#get-api-key">申请百炼 API Key</a>。GPT 密钥为可选配置，初次使用可以留空。</p>
+        <ol class="path-strip" aria-label="设置路径"><li>打开侧栏</li><li>进入设置</li><li>填写并测试</li><li>保存设置</li></ol>
+        <div class="screenshot-steps">
+          <section class="screenshot-step">
+            <h2><span class="step-number">1</span>打开会话侧栏</h2>
+            <p>在主界面点击左上角的三横线图标，打开会话侧栏。</p>
+            <figure><a class="guide-image-link" href="assets/tutorial/01-open-sidebar.webp" aria-label="查看大图：打开会话侧栏"><img src="assets/tutorial/01-open-sidebar.webp" alt="PAIA 主界面，箭头指向左上角的三横线菜单按钮。" width="1216" height="780" fetchpriority="high"></a><figcaption>主界面左上角</figcaption></figure>
+          </section>
+          <section class="screenshot-step">
+            <h2><span class="step-number">2</span>进入设置</h2>
+            <p>点击侧栏左下角的齿轮图标“设置”，进入配置页面。</p>
+            <figure><a class="guide-image-link" href="assets/tutorial/02-open-settings.webp" aria-label="查看大图：进入设置"><img src="assets/tutorial/02-open-settings.webp" alt="会话侧栏，个人会话信息已遮盖，箭头指向左下角的设置按钮。" width="1216" height="780"></a><figcaption>会话侧栏底部</figcaption></figure>
+          </section>
+          <section class="screenshot-step">
+            <h2><span class="step-number">3</span>粘贴百炼密钥</h2>
+            <p>找到 <strong>Bailian API Key</strong>，粘贴完整密钥，再点击其下方的“测试连接”。这项测试验证实时转写连接。</p>
+            <figure><a class="guide-image-link" href="assets/tutorial/03-bailian-key.webp" aria-label="查看大图：填写百炼密钥并测试"><img src="assets/tutorial/03-bailian-key.webp" alt="设置中的 Bailian API Key 输入框已遮盖，标注分别指向密钥输入框与测试连接按钮。" width="1216" height="780" loading="lazy"></a><figcaption>密钥区域已作隐私遮盖</figcaption></figure>
+          </section>
+          <section class="screenshot-step">
+            <h2><span class="step-number">4</span>验证会议模型</h2>
+            <p>继续向下找到“主模型连接”，点击这一项的“测试连接”，验证提问和纪要使用的模型。两项测试需要分别进行。</p>
+            <figure><a class="guide-image-link" href="assets/tutorial/04-test-model.webp" aria-label="查看大图：验证主模型连接"><img src="assets/tutorial/04-test-model.webp" alt="主模型连接设置，箭头指向其右侧的测试连接按钮。" width="1216" height="780" loading="lazy"></a><figcaption>主模型名称以安装版本显示为准</figcaption></figure>
+          </section>
+        </div>
+        <section class="save-step">
+          <div><h2><span class="step-number">5</span>保存设置</h2><p>滑动到设置页最底部，点击紫色的<strong>“保存设置”</strong>按钮。保存后再回到会话页面。</p><p><strong>测试成功不会代替保存。</strong>直接点击返回，刚填写的配置不会保存。</p></div>
+          <figure><a class="guide-image-link" href="assets/tutorial/api-key-05-save.webp" aria-label="查看大图：保存设置"><img src="assets/tutorial/api-key-05-save.webp" alt="设置页最底部，箭头指向紫色的保存设置按钮。" width="1216" height="780" loading="lazy"></a><figcaption>设置页最底部</figcaption></figure>
+        </section>
+        <aside class="guide-note"><strong>准备使用同声传译？</strong><p>还需填写与密钥对应的“百炼业务空间 ID（同声传译）”。具体位置见<a href="#connection">连接验证与业务空间</a>。</p></aside>
+        <p class="article-footnote">截图中的通知栏已裁除，个人会话及密钥信息已遮盖。不同版本的界面文字可能略有差异。</p>
+      </article>
+
+      <article id="get-api-key" class="guide-article" data-group="快速开始" aria-labelledby="title-get-api-key">
+        <header class="article-heading"><p class="article-kicker">快速开始 · 02</p><h1 id="title-get-api-key">申请百炼 API Key</h1><p class="article-lead">在阿里云百炼创建自己的模型调用凭证，再将其填入 PAIA。</p></header>
+        <p>API Key 用于验证模型调用身份，调用费用计入该密钥所属的阿里云账号。申请与管理在百炼控制台完成。</p>
+        <ol class="prose-steps">
+          <li><h2>登录百炼控制台</h2><p>打开<a href="https://bailian.console.aliyun.com/" target="_blank" rel="noreferrer">阿里云百炼控制台</a>，登录阿里云账号。首次使用时，按控制台提示完成账号认证与服务开通。</p></li>
+          <li><h2>选择华北 2（北京）地域</h2><p>在控制台右上角切换地域，选择<strong>华北 2（北京）</strong>。本教程对应的 PAIA 版本使用北京地域的百炼接口；其他地域创建的密钥不能直接混用。</p></li>
+          <li><h2>打开 API Key 管理</h2><p>进入<a href="https://bailian.console.aliyun.com/cn-beijing/model/settings/api-key" target="_blank" rel="noreferrer">北京地域的 API Key 页面</a>，点击<strong>“创建 API Key”</strong>。若已有可用密钥，也可直接复制。</p></li>
+          <li><h2>选择归属账号与业务空间</h2><p>个人初次使用可选择自己的主账号与<strong>默认业务空间</strong>。如使用团队空间，由管理员确认模型调用权限；若设置自定义权限，需包含 PAIA 使用的语音与主模型服务。</p></li>
+          <li><h2>创建并复制</h2><p>确认创建后，点击密钥旁的复制图标，回到 PAIA 的 <strong>Bailian API Key</strong> 输入框粘贴。按<a href="#api-key">填写教程</a>完成测试与保存。</p></li>
+        </ol>
+        <aside class="guide-note"><strong>费用与额度</strong><p>是否有免费额度、额度期限及模型单价，以百炼账号和<a href="https://help.aliyun.com/zh/model-studio/model-pricing" target="_blank" rel="noreferrer">官方计费说明</a>为准。实时转写、翻译、音频摘要和问答可能分别产生调用费用。</p></aside>
+        <h2>密钥与业务空间 ID 的区别</h2>
+        <div class="table-scroll"><table><thead><tr><th>项目</th><th>用途</th><th>PAIA 中的位置</th></tr></thead><tbody><tr><td>百炼 API Key</td><td>授权访问模型服务</td><td>Bailian API Key</td></tr><tr><td>业务空间 ID</td><td>标识百炼业务空间</td><td>百炼业务空间 ID（同声传译）</td></tr></tbody></table></div>
+        <p>两者不能互相替代，也不应填写阿里云登录密码或 AccessKey ID。完整 API Key 仅填写到 PAIA 设置中，不要发送到反馈、聊天或公开截图中。</p>
+        <div class="source-links"><span>官方参考</span><a href="https://help.aliyun.com/zh/model-studio/get-api-key" target="_blank" rel="noreferrer">获取与配置 API Key ↗</a><a href="https://help.aliyun.com/zh/model-studio/use-workspace" target="_blank" rel="noreferrer">业务空间权限管理 ↗</a></div>
+      </article>
+
+      <article id="connection" class="guide-article" data-group="快速开始" aria-labelledby="title-connection">
+        <header class="article-heading"><p class="article-kicker">快速开始 · 03</p><h1 id="title-connection">连接验证与业务空间</h1><p class="article-lead">分别验证模型连接，让每项功能使用正确的配置。</p></header>
+        <h2>两处“测试连接”分别验证什么？</h2>
+        <div class="table-scroll"><table><thead><tr><th>设置位置</th><th>验证内容</th></tr></thead><tbody><tr><td>Bailian API Key 下方</td><td>当前实时转写模型的连接</td></tr><tr><td>主模型连接</td><td>会议问答与纪要主模型的连接</td></tr></tbody></table></div>
+        <p>灰色表示尚未测试；测试时显示连接状态，成功或失败后会显示对应提示和状态颜色。转写测试通过，不代表主模型或同声传译也已验证。修改密钥或模型后，应重新测试并<strong>保存设置</strong>。</p>
+        <h2>填写同声传译的业务空间 ID</h2>
+        <ol class="text-steps"><li>登录百炼控制台，确认地域为<strong>北京</strong>。</li><li>在当前业务空间信息或“业务空间管理”中，复制所选空间的 <strong>Workspace ID（业务空间 ID）</strong>。</li><li>回到 PAIA 设置，粘贴到<strong>“百炼业务空间 ID（同声传译）”</strong>。</li><li>确认该空间与 API Key 对应，选择翻译方向，然后滚动到底部<strong>保存设置</strong>。</li></ol>
+        <p>业务空间 ID 是控制台分配的标识，不能自行填写空间名称、模型名称或手机号码。</p>
+        <h2>完成一次简短的功能检查</h2>
+        <p>返回主界面，开始一段短录音并说一句话，确认转写有内容。再打开翻译，说一句源语言，检查是否产生目标语言文字。最后发送一个简短问题，验证主模型是否能回答。</p>
+        <aside class="guide-note"><strong>连接失败时</strong><p>依次检查网络、完整密钥、北京地域、业务空间权限与可用额度。保留界面中的错误文字以便排查，但不要在反馈中附上密钥。</p></aside>
+        <div class="source-links"><span>官方参考</span><a href="https://help.aliyun.com/zh/model-studio/obtain-the-app-id-and-workspace-id" target="_blank" rel="noreferrer">获取业务空间 ID ↗</a><a href="#faq">查看常见问题</a></div>
+      </article>
+
+      <article id="recording" class="guide-article" data-group="录音与协作" aria-labelledby="title-recording">
+        <header class="article-heading"><p class="article-kicker">录音与协作</p><h1 id="title-recording">开始、暂停与继续录音</h1><p class="article-lead">在同一个会话中记录完整的课程或会议。</p></header>
+        <h2>开始一段录音</h2><p>点击主界面底部中央的开始按钮。首次使用时，按系统提示允许麦克风权限；通知权限用于显示录音和后台任务状态。未配置密钥时仍可本地录音，在线转写、翻译和模型回答则需要对应配置。</p>
+        <h2>暂停后继续</h2><p>录音过程中再次点击中央按钮暂停。留在当前会话，点击开始即可继续记录，多段音频会归入同一会话。暂停录音不会自动生成会议纪要。</p>
+        <h2>长录音与后台处理</h2><p>音频会分段保存在本机，已完成的片段可在后台生成摘要索引，帮助之后的提问定位内容。预处理需要可用网络与百炼配置，长会话的处理时间和费用会随内容增加。</p><p>应用通过前台服务维持录音与后台任务。若系统限制后台运行，请在系统应用设置中检查 PAIA 的通知权限与电池管理权限；不同系统的入口名称可能不同。</p>
+        <aside class="guide-note"><strong>录音与转写分别控制</strong><p>关闭转写或翻译不会暂停本地录音。暂停采集时应操作中央录音按钮，并核对界面状态。</p></aside>
+        <h2>录音前的准备</h2><p>确认设备有足够空间，麦克风未被其他应用占用，并取得现场参与者的录音许可。重要内容建议在录音后及时<a href="#media">导出音频</a>。</p>
+      </article>
+
+      <article id="transcription" class="guide-article" data-group="录音与协作" aria-labelledby="title-transcription">
+        <header class="article-heading"><p class="article-kicker">录音与协作</p><h1 id="title-transcription">实时转写与同声传译</h1><p class="article-lead">跟随现场内容阅读原文与译文，两个模块可独立开关。</p></header>
+        <h2>实时转写</h2><p>点击底部“转写”按钮启用。录音开始后，识别文字会持续写入转写气泡。关闭时保留已有内容，再次开启后从重新启用时的音频继续处理，不自动补写关闭期间的内容。</p>
+        <h2>同声传译</h2><p>先在设置中完成百炼密钥与业务空间配置，选择翻译方向并保存。点击“翻译”按钮后，译文会出现在独立气泡中；录音前和录音中均可开关。</p><p>默认方向为<strong>英译中</strong>。需要汉译英时，在同声传译设置中切换方向并保存，再核对气泡状态。</p>
+        <h2>折叠与复制</h2><p>使用气泡右上角的折叠按钮收起长文本。转写和翻译折叠后保留末尾几行，便于关注最新内容；展开可阅读全文，复制按钮可复制气泡文字。</p>
+        <aside class="guide-note"><strong>识别文字是独立的阅读辅助</strong><p>专业术语、人名或现场噪声可能影响准确性。会议问答和纪要会使用音频及其摘要、笔记和图片上下文，关闭转写不妨碍这些功能。</p></aside>
+      </article>
+
+      <article id="questions-notes" class="guide-article" data-group="录音与协作" aria-labelledby="title-questions-notes">
+        <header class="article-heading"><p class="article-kicker">录音与协作</p><h1 id="title-questions-notes">中途提问与现场笔记</h1><p class="article-lead">同一个输入框，可以提问，也可以保存与现场时间关联的笔记。</p></header>
+        <h2>在录音中提问</h2><p>确认底部模式按钮显示<strong>“提问”</strong>，在输入框输入问题并点击发送。例如：“刚才这一部分的主要结论是什么？”提问会打开独立回答气泡，录音继续进行。</p><p>模型结合当前会话的音频摘要、相关音频片段、图片与笔记回答。询问当前进度时，建议明确写“刚才”或“最近这一段”；也可以在未录音时直接进行普通文字对话。</p>
+        <h2>切换为笔记</h2><p>点击底部“提问”模式按钮，切换为<strong>“笔记”</strong>。输入框显示“在此键入笔记”后，发送的内容会保存为笔记，不立即请求模型回答。再次点击按钮可切回提问。</p><p>笔记会记录提交时间，便于后续回答与纪要参考当时的上下文。时间记录用于辅助理解，不代表每张照片都已精确对齐到某一秒音频。</p>
+        <h2>附上现场照片</h2><p>点击输入框左侧相机按钮拍照，可连续添加多张。发送前在输入框上方检查预览，移除不需要的照片后再发送。提问和笔记两种模式都可以附图。</p>
+        <h2>修改与重新回答</h2><p>提问气泡右上角的编辑按钮可修改问题并调整图片。回答气泡右上角的重新生成按钮会使用当前可用的会话上下文再次回答。长按笔记或用户提问气泡，可删除对应内容并将其移出后续上下文。</p>
+        <aside class="guide-note"><strong>区分“提问”和“发送”</strong><p>底部功能区的“提问 / 笔记”按钮负责切换模式；输入框右侧的发送按钮负责提交本次内容。</p></aside>
+      </article>
+
+      <article id="minutes" class="guide-article" data-group="录音与协作" aria-labelledby="title-minutes">
+        <header class="article-heading"><p class="article-kicker">录音与协作</p><h1 id="title-minutes">生成会议纪要</h1><p class="article-lead">将会话中的讨论、照片和笔记整理为可回顾的记录。</p></header>
+        <ol class="text-steps"><li>先<strong>暂停录音并等待音频保存完成</strong>，确认内容已记录在当前会话中。</li><li>点击底部<strong>“纪要”</strong>按钮，界面会显示纪要气泡和处理状态。</li><li>等待音频片段处理与模型输出，阅读生成的结论、要点和待办事项。</li><li>有新内容时，再次点击“纪要”或使用气泡的重新生成按钮，更新这份纪要。</li></ol>
+        <h2>纪要使用哪些资料？</h2><p>纪要结合当前会话保存的音频、音频摘要、笔记与图片。模型可能进一步读取相关音频片段，转写气泡不是生成纪要的前置条件。</p>
+        <h2>等待期间</h2><p>长录音可能需要先处理多个音频片段。后台服务会继续执行任务，但应允许应用后台运行并保持网络可用。气泡的状态文字可用于区分音频处理与模型回答阶段。</p>
+        <h2>核对后使用</h2><p>生成内容可折叠、展开和复制。人物、数字、专业结论及行动项应结合原始资料确认；再次生成会替换原纪要内容，需保留旧稿时可先复制。</p>
+      </article>
+
+      <article id="sessions" class="guide-article" data-group="资料管理" aria-labelledby="title-sessions">
+        <header class="article-heading"><p class="article-kicker">资料管理</p><h1 id="title-sessions">历史会话与文件夹</h1><p class="article-lead">按课程、项目或会议主题组织现场资料。</p></header>
+        <h2>创建和切换会话</h2><p>打开左上角侧栏，点击顶部加号创建新会话。点击历史会话可继续查看或提问；当前会话标题显示在主界面顶部。</p>
+        <h2>重命名与删除</h2><p>长按历史会话，可以手动修改标题或删除会话。纪要生成后可自动生成标题，手动名称便于按自己的方式整理。</p>
+        <h2>使用文件夹</h2><p>点击侧栏顶部的文件夹加号创建文件夹。通过会话的长按菜单，将现有会话复制到指定文件夹，再点击文件夹查看分类后的记录。</p>
+        <h2>查看空间占用</h2><p>历史会话下方的灰色文字显示其媒体和记录的空间占用估计。删除会话会清理不再被其他会话引用的关联媒体；共享资料可能仍由其他会话保留。</p>
+        <aside class="guide-note"><strong>本地记录</strong><p>历史会话保存在当前设备上。更换设备或卸载前，应先保存重要资料；在另一台设备安装 PAIA 不会自动同步当前会话。</p></aside>
+      </article>
+
+      <article id="media" class="guide-article" data-group="资料管理" aria-labelledby="title-media">
+        <header class="article-heading"><p class="article-kicker">资料管理</p><h1 id="title-media">照片查看与音频导出</h1><p class="article-lead">查看原始资料，并将重要内容保存到应用之外。</p></header>
+        <h2>查看与保存照片</h2><p>点击气泡中的照片进入全屏查看。左右滑动可浏览整个会话中的照片，两指缩放可查看细节。点击保存按钮，将当前原图保存到本地相册，并留意图片查看界面的保存结果提示。</p>
+        <h2>选择上传画质</h2><p>设置中的“上传图片质量”控制模型请求使用的图片版本，不改变本地拍摄原图。普通场景可用“标准”；图表、公式或小字需要更高细节时可选择“原图”，但上传和响应可能更慢。</p>
+        <h2>导出会话音频</h2><p>先暂停录音并等待保存完成，再点击主界面标题栏右上角的导出按钮。已保存的音频分段会导出到设备的 <strong>Download/PAIA</strong> 文件夹，可通过文件管理器查看。</p><p>当前应用内直接导出需要 <strong>Android 10 或以上版本</strong>。多段录音会分别导出，不会自动合并为一个文件；正在录制且尚未保存的片段不在导出范围内。</p>
+        <aside class="guide-note"><strong>音频导出不等于完整会话备份</strong><p>导出的音频不包含全部聊天、照片与应用设置。需要长期保存的笔记、纪要和照片，应分别复制或保存。</p></aside>
+      </article>
+
+      <article id="preferences" class="guide-article" data-group="设置与帮助" aria-labelledby="title-preferences">
+        <header class="article-heading"><p class="article-kicker">设置与帮助</p><h1 id="title-preferences">外观与存储设置</h1><p class="article-lead">根据阅读习惯和录音时长调整 PAIA。</p></header>
+        <h2>语言、主题和强调色</h2><p>在设置中选择中文或 English。主题支持跟随系统、浅色和深色；强调色可选择紫色、蓝色、琥珀或玫瑰。修改后点击底部“保存设置”。</p>
+        <h2>功能文字标签</h2><p>初次使用建议保留“显示功能文字标签”，以便区分转写、翻译、纪要和提问 / 笔记。熟悉图标后可在设置中关闭文字。</p>
+        <h2>录音质量</h2><div class="table-scroll"><table><thead><tr><th>选项</th><th>选择建议</th></tr></thead><tbody><tr><td>极省空间</td><td>优先控制长时间录音的本地占用</td></tr><tr><td>省空间</td><td>以普通语音记录为主的日常使用</td></tr><tr><td>标准</td><td>希望保留更多录音细节时使用</td></tr></tbody></table></div><p>实际格式和预计占用以设置页面为准。低质量档位对嘈杂环境、远距离发言的识别可能更不利；可先用现场环境短录测试。修改设置不会重新压缩已有录音。</p>
+        <h2>上传图片质量</h2><p>“快速”减少上传数据，“标准”兼顾细节与速度，“原图”保留更多视觉信息。这项设置不降低保存在设备上的原图质量。</p>
+        <h2>调试模式</h2><p>开启后，功能气泡标题会显示当前调用的模型，方便区分主模型与被调度的模型。模型由任务和可用配置决定，调试模式本身不会提高回答准确性。</p>
+      </article>
+
+      <article id="updates" class="guide-article" data-group="设置与帮助" aria-labelledby="title-updates">
+        <header class="article-heading"><p class="article-kicker">设置与帮助</p><h1 id="title-updates">更新与问题反馈</h1><p class="article-lead">从“关于”查看新版本、访问官网或提交使用反馈。</p></header>
+        <h2>更新应用</h2><ol class="text-steps"><li>打开左上角侧栏，点击底部的<strong>“关于”</strong>。</li><li>查看更新一栏。有新版本时开始下载安装包；下载进度支持点击暂停或继续。</li><li>下载完成后，点击该项启动系统安装，按提示允许 PAIA 安装更新。</li></ol>
+        <p>使用官方提供的兼容更新包直接覆盖安装，可保留当前本机记录。<strong>更新前不要卸载旧版。</strong>安装遇到签名或版本不兼容时，应先保留原应用与重要资料，再反馈问题。</p>
+        <h2>在应用内发送反馈</h2><p>进入“关于 → 反馈 bug &amp; 建议”，填写遇到的问题并点击发送。看到发送成功后，反馈会进入项目的私有反馈仓库，发布者可查看处理。</p><p>建议包含触发步骤、预期结果、实际表现与错误文字。反馈可能附带应用版本、系统和设备诊断信息，<strong>不要填写 API Key 或私人会议内容</strong>。</p>
+        <h2>访问官网</h2><p>在“关于”中点击“官网”，系统会使用浏览器打开 PAIA 网站，可查看版本信息和本使用教程。</p>
+      </article>
+
+      <article id="faq" class="guide-article" data-group="设置与帮助" aria-labelledby="title-faq">
+        <header class="article-heading"><p class="article-kicker">设置与帮助</p><h1 id="title-faq">常见问题</h1><p class="article-lead">配置与日常使用中的常见情况。</p></header>
+        <div class="guide-faq">
+          <details open><summary>填了密钥，为什么返回后仍提示未设置？</summary><p>请确认在设置页最底部点击了“保存设置”。测试连接只验证配置，不会代替保存。</p></details>
+          <details><summary>必须同时配置百炼与 GPT 密钥吗？</summary><p>不需要。百炼是语音和默认主模型使用的配置，GPT 为可选项。未配置 GPT 时，可由百炼侧的可用专家模型协作处理。</p></details>
+          <details><summary>转写测试成功，但提问失败怎么办？</summary><p>两者使用不同接口。请运行“主模型连接”对应的测试，并检查密钥地域、模型权限、额度以及主模型名称是否仍可用。</p></details>
+          <details><summary>业务空间 ID 可以留空吗？</summary><p>本版本的同声传译需要这一项；先使用录音、转写或问答时，不必为了这些功能随意填写。需要翻译时，请从百炼复制与 API Key 对应的北京地域业务空间 ID。</p></details>
+          <details><summary>关闭转写后还能生成纪要吗？</summary><p>可以。转写是独立的阅读功能，会议问答和纪要使用音频及其摘要、笔记与图片上下文。</p></details>
+          <details><summary>为什么长录音处理需要等待？</summary><p>会话中的音频需要分段处理，尚未完成的摘要、相关片段读取、图片上传和模型生成都会影响时间。保持网络可用，并留意气泡中的任务状态。</p></details>
+          <details><summary>网页与应用中的模型名称不同怎么办？</summary><p>截图用于定位功能入口。模型可用性会随版本和服务商调整，以安装版本和百炼控制台为准；不要仅为了与截图一致而修改模型 ID。</p></details>
+          <details><summary>删除或卸载后，数据能恢复吗？</summary><p>会话默认保存在本机。删除会话或卸载可能清除对应数据，现阶段不能依赖云端自动恢复。请先导出重要音频并保存所需照片和文字。</p></details>
+        </div>
+      </article>
+
+      <nav class="article-pagination" aria-label="相邻章节" hidden><a id="previous-chapter" href="#api-key"><span>上一篇</span><strong></strong></a><a id="next-chapter" href="#get-api-key"><span>下一篇</span><strong></strong></a></nav>
+      <footer class="guide-footer"><span>PAIA · 会议与课堂助手</span><a href="index.html#release">下载应用</a><a href="privacy.html">隐私说明</a></footer>
+    </main>
+  </div>
+  <dialog id="image-dialog" class="image-dialog" aria-labelledby="image-caption">
+    <div class="image-dialog-bar"><p id="image-caption">操作图示</p><form method="dialog"><button class="close-image" aria-label="关闭图片" title="关闭图片"><span aria-hidden="true">×</span></button></form></div>
+    <div class="image-dialog-body"><img id="expanded-image" alt=""></div>
+  </dialog>
+</body>
+</html>
