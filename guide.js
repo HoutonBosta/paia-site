@@ -75,6 +75,7 @@
       setZoom(false);
       expandedImage.src = link.href;
       expandedImage.alt = thumbnail.alt;
+      zoomButton.style.setProperty("--image-native-width", `${thumbnail.naturalWidth || thumbnail.width}px`);
       document.getElementById("image-caption").textContent = link.closest("section").querySelector("h2").textContent;
       dialog.showModal();
       dialog.scrollTop = 0;
@@ -85,6 +86,8 @@
     const label = zoomed ? "查看完整图片" : "放大图片";
     zoomButton.setAttribute("aria-label", label);
     zoomButton.title = label;
+    zoomButton.scrollTop = 0;
+    zoomButton.scrollLeft = 0;
   }
   zoomButton.addEventListener("click", () => {
     setZoom(zoomButton.getAttribute("aria-pressed") !== "true");
