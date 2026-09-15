@@ -1,16 +1,21 @@
 (function () {
   "use strict";
 
+  if (window.location.hash === "#author") {
+    window.location.replace(new URL("author.html", window.location.href).href);
+    return;
+  }
+
   const fallback = {
-    versionName: "1.6.5-test",
-    versionCode: 12,
+    versionName: "1.6.6-test",
+    versionCode: 13,
     minAndroid: "Android 7.0+",
-    releaseDate: "2026-09-14",
-    releaseNotes: "百炼 API Key 输入框新增圆圈问号，可直接打开手机申请教程；支持中英文无障碍说明与长按提示。教程涵盖手机浏览器电脑版设置、创建密钥及返回应用保存。打开教程不传输密钥，不修改已输入的配置。沿用原签名，可覆盖升级保留本机数据，请勿先卸载。此 APK 使用 Android Debug 签名，仅用于公开测试。",
-    apkUrl: "https://gitee.com/Houton_Bosta/paia-site/releases/download/v1.6.5-test/PAIA-1.6.5-test.apk",
-    apkSize: 22855137,
-    sha256: "c243a137f0a745a13e58b04da861814319e81df8b811fddf7a81e9e928e60b26",
-    releasePageUrl: "https://gitee.com/Houton_Bosta/paia-site/releases/tag/v1.6.5-test",
+    releaseDate: "2026-09-15",
+    releaseNotes: "关于作者改为独立页面；实时转写默认关闭；笔记与提问图标颜色统一；音频分段摘要按录音时间关联同时段笔记和图片，笔记修改后会刷新相关摘要。沿用原签名，可覆盖升级保留本机数据，请勿先卸载。此 APK 使用 Android Debug 签名，仅用于公开测试。",
+    apkUrl: "https://gitee.com/Houton_Bosta/paia-site/releases/download/v1.6.6-test/PAIA-1.6.6-test.apk",
+    apkSize: 22871521,
+    sha256: "144e4a9b33f2f81b18c605f7410254827f2f5bd5598560ab9fadb8e9ca13bdac",
+    releasePageUrl: "https://gitee.com/Houton_Bosta/paia-site/releases/tag/v1.6.6-test",
     repositoryUrl: "https://github.com/HoutonBosta/paia-site"
   };
 

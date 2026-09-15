@@ -126,17 +126,17 @@ h3 { margin-bottom: 7px; font-size: 1.08rem; }
 .principles-list span { color: var(--purple); font-weight: 800; }
 .principles-list p { margin: 0; color: var(--muted); font-size: .9rem; }
 .author-section { padding: 80px 0; border-top: 1px solid var(--line); scroll-margin-top: 24px; }
-.author-section h2 { font-size: 2rem; letter-spacing: 0; }
+.author-page-title { margin-bottom: 14px; font-size: 2.5rem; line-height: 1.2; letter-spacing: 0; color: var(--ink); }
 .author-section .eyebrow { letter-spacing: 0; }
 .author-layout { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 64px; align-items: start; }
 .author-profile { margin: 0; min-width: 0; }
 .author-profile img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 4; border-radius: 6px; }
-.author-profile figcaption { margin: 14px 0 10px; color: var(--muted); font-size: .85rem; }
+.author-profile figcaption { margin: 14px 0 10px; color: var(--ink); font-size: 1.15rem; font-weight: 700; }
 .author-email { color: var(--purple); text-underline-offset: 4px; overflow-wrap: anywhere; }
 .author-contact { margin: 12px 0 0; color: var(--muted); font-size: .88rem; }
 .author-story { min-width: 0; }
 .author-story section + section { margin-top: 26px; padding-top: 26px; border-top: 1px solid var(--line); }
-.author-story h3 { margin-bottom: 12px; font-size: 1.15rem; letter-spacing: 0; }
+.author-story h2 { margin-bottom: 12px; font-size: 1.15rem; line-height: 1.4; letter-spacing: 0; }
 .author-story p { margin-bottom: 14px; line-height: 1.85; }
 .author-story p:last-child { margin-bottom: 0; }
 .author-story .author-roadmap-status { color: var(--muted); font-size: .86rem; }
