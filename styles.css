@@ -36,7 +36,7 @@ a { color: inherit; }
 .site-nav a:hover, .text-link:hover, .footer-links a:hover { color: var(--purple); }
 .header-source { border-bottom: 1px solid var(--line); padding-bottom: 2px; }
 main { overflow: hidden; }
-.hero, .release-section, .feature-section, .principles-section, .faq-section { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
+.hero, .release-section, .feature-section, .principles-section, .author-section, .faq-section { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
 .hero {
   min-height: 560px;
   padding: 92px 0 104px;
@@ -125,6 +125,21 @@ h3 { margin-bottom: 7px; font-size: 1.08rem; }
 .principles-list > div { display: grid; grid-template-columns: 90px 1fr; gap: 20px; padding: 19px 0; border-bottom: 1px solid var(--line); }
 .principles-list span { color: var(--purple); font-weight: 800; }
 .principles-list p { margin: 0; color: var(--muted); font-size: .9rem; }
+.author-section { padding: 80px 0; border-top: 1px solid var(--line); scroll-margin-top: 24px; }
+.author-section h2 { font-size: 2rem; letter-spacing: 0; }
+.author-section .eyebrow { letter-spacing: 0; }
+.author-layout { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 64px; align-items: start; }
+.author-profile { margin: 0; min-width: 0; }
+.author-profile img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 4; border-radius: 6px; }
+.author-profile figcaption { margin: 14px 0 10px; color: var(--muted); font-size: .85rem; }
+.author-email { color: var(--purple); text-underline-offset: 4px; overflow-wrap: anywhere; }
+.author-contact { margin: 12px 0 0; color: var(--muted); font-size: .88rem; }
+.author-story { min-width: 0; }
+.author-story section + section { margin-top: 26px; padding-top: 26px; border-top: 1px solid var(--line); }
+.author-story h3 { margin-bottom: 12px; font-size: 1.15rem; letter-spacing: 0; }
+.author-story p { margin-bottom: 14px; line-height: 1.85; }
+.author-story p:last-child { margin-bottom: 0; }
+.author-story .author-roadmap-status { color: var(--muted); font-size: .86rem; }
 .faq-section { padding: 88px 0 110px; border-top: 1px solid var(--line); }
 .faq-list { max-width: 840px; border-top: 1px solid var(--line); }
 details { border-bottom: 1px solid var(--line); }
@@ -145,6 +160,7 @@ code { padding: 2px 5px; color: var(--purple-deep); background: var(--purple-sof
   .hero-mark { justify-items: start; }
   .hero-mark img { width: 160px; border-radius: 32px; }
   .release-layout, .principles-section { grid-template-columns: 1fr; gap: 18px; }
+  .author-layout { grid-template-columns: minmax(0, 230px) minmax(0, 1fr); gap: 30px; }
   .feature-grid { grid-template-columns: repeat(2, 1fr); }
   .feature-item:nth-child(2) { border-right: 0; }
   .feature-item:nth-child(3), .feature-item:nth-child(4) { border-top: 1px solid var(--line); }
@@ -152,7 +168,7 @@ code { padding: 2px 5px; color: var(--purple-deep); background: var(--purple-sof
   .feature-item:nth-child(4) { padding-left: 25px; }
 }
 @media (max-width: 520px) {
-  .site-header, .hero, .release-section, .feature-section, .principles-section, .faq-section, .site-footer { width: min(100% - 28px, 1180px); }
+  .site-header, .hero, .release-section, .feature-section, .principles-section, .author-section, .faq-section, .site-footer { width: min(100% - 28px, 1180px); }
   .site-header { min-height: 64px; }
   .brand img { width: 30px; height: 30px; }
   .site-nav { margin-left: auto; gap: 10px; font-size: .78rem; }
@@ -172,6 +188,9 @@ code { padding: 2px 5px; color: var(--purple-deep); background: var(--purple-sof
   .feature-item:nth-child(3) { padding-left: 0; }
   .feature-item:nth-child(4) { padding-left: 14px; }
   .principles-section { padding: 70px 0; }
+  .author-section { padding: 56px 0; }
+  .author-layout { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .author-profile { width: 100%; max-width: 360px; }
   .site-footer { grid-template-columns: 1fr; }
   .footer-links { grid-row: 2; }
 }
@@ -181,4 +200,5 @@ code { padding: 2px 5px; color: var(--purple-deep); background: var(--purple-sof
   .release-meta { background: #242117; border-color: #52482b; }
   .release-meta dl > div { border-color: #51472b; }
   .button-quiet { background: var(--panel); }
+  .author-section .eyebrow, .author-email { color: #c9bcff; }
 }

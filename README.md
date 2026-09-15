@@ -8,6 +8,7 @@ PAIA 是一个 Android 应用项目。本目录是发布站点及反馈服务的
 
 - 仓库：`https://github.com/HoutonBosta/paia-site`
 - 地址：`https://houtonbosta.github.io/paia-site/`
+- [关于作者](https://houtonbosta.github.io/paia-site/#author)：研究方向、个人愿景、项目初衷与联系方式。
 - [使用教程](https://houtonbosta.github.io/paia-site/guide.html)：密钥申请、百炼配置、录音协作、资料管理与常见问题。
 - [电脑申请百炼 API Key（推荐）](https://houtonbosta.github.io/paia-site/guide.html#get-api-key)：优先使用电脑创建密钥，再在手机上的 PAIA 中填写并保存。
 - [手机申请百炼 API Key（备用）](https://houtonbosta.github.io/paia-site/guide.html#get-api-key-mobile)：暂时没有电脑时，可尝试浏览器电脑版模式；适用性取决于浏览器与百炼当前页面。
