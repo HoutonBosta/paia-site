@@ -1,12 +1,12 @@
 {
-  "versionName": "1.6.6-test",
-  "versionCode": 13,
+  "versionName": "1.6.7-test",
+  "versionCode": 14,
   "minAndroid": "Android 7.0+",
-  "releaseDate": "2026-09-15",
-  "releaseNotes": "关于作者改为独立页面；实时转写默认关闭；笔记与提问图标颜色统一；音频分段摘要按录音时间关联同时段笔记和图片，笔记修改后会刷新相关摘要。沿用原签名，可覆盖升级保留本机数据，请勿先卸载。此 APK 使用 Android Debug 签名，仅用于公开测试。",
-  "apkUrl": "https://gitee.com/Houton_Bosta/paia-site/releases/download/v1.6.6-test/PAIA-1.6.6-test.apk",
-  "apkSize": 22871521,
-  "sha256": "144e4a9b33f2f81b18c605f7410254827f2f5bd5598560ab9fadb8e9ca13bdac",
-  "releasePageUrl": "https://gitee.com/Houton_Bosta/paia-site/releases/tag/v1.6.6-test",
+  "releaseDate": "2026-09-17",
+  "releaseNotes": "修复实时转写临时结果未显示的问题：识别中的文字在原气泡内持续更新，最终结果替换草稿；折叠预览与复制包含最新转写；补充暂停、续录及迟到回调保护，避免旧录音的完成事件干扰新录音。实时转写仍默认关闭。沿用原签名，可覆盖升级保留本机数据，请勿先卸载。此 APK 使用 Android Debug 签名，仅用于公开测试。",
+  "apkUrl": "https://gitee.com/Houton_Bosta/paia-site/releases/download/v1.6.7-test/PAIA-1.6.7-test.apk",
+  "apkSize": 23464504,
+  "sha256": "e87cfa03002c11a049014f940bdcd8862e07ddf0c3a90bed45356de0b24a7c46",
+  "releasePageUrl": "https://gitee.com/Houton_Bosta/paia-site/releases/tag/v1.6.7-test",
   "repositoryUrl": "https://github.com/HoutonBosta/paia-site"
 }
