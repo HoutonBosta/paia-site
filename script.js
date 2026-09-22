@@ -7,15 +7,15 @@
   }
 
   const fallback = {
-    versionName: "1.6.7-test",
-    versionCode: 14,
+    versionName: "1.6.8-test",
+    versionCode: 15,
     minAndroid: "Android 7.0+",
-    releaseDate: "2026-09-17",
-    releaseNotes: "修复实时转写临时结果未显示的问题：识别中的文字在原气泡内持续更新，最终结果替换草稿；折叠预览与复制包含最新转写；补充暂停、续录及迟到回调保护，避免旧录音的完成事件干扰新录音。实时转写仍默认关闭。沿用原签名，可覆盖升级保留本机数据，请勿先卸载。此 APK 使用 Android Debug 签名，仅用于公开测试。",
-    apkUrl: "https://gitee.com/Houton_Bosta/paia-site/releases/download/v1.6.7-test/PAIA-1.6.7-test.apk",
-    apkSize: 23464504,
-    sha256: "e87cfa03002c11a049014f940bdcd8862e07ddf0c3a90bed45356de0b24a7c46",
-    releasePageUrl: "https://gitee.com/Houton_Bosta/paia-site/releases/tag/v1.6.7-test",
+    releaseDate: "2026-09-22",
+    releaseNotes: "新增笔记气泡编辑、照片增删、气泡长按删除、更新公告和自然语言设置修改。实时转写默认关闭。此 APK 使用 Android Debug 签名，仅用于公开测试。",
+    apkUrl: "https://gitee.com/Houton_Bosta/paia-site/releases/download/v1.6.8-test/app-debug.apk",
+    apkSize: 23539497,
+    sha256: "652c65efea8e7ab0a1416693a84f0b28634c5dac0c803d97c714917361140fd0",
+    releasePageUrl: "https://gitee.com/Houton_Bosta/paia-site/releases/tag/v1.6.8-test",
     repositoryUrl: "https://github.com/HoutonBosta/paia-site"
   };
 
