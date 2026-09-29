@@ -7,15 +7,15 @@
   }
 
   const fallback = {
-    versionName: "1.6.8-test",
-    versionCode: 15,
+    versionName: "1.6.9-test",
+    versionCode: 16,
     minAndroid: "Android 7.0+",
-    releaseDate: "2026-09-22",
-    releaseNotes: "新增笔记气泡编辑、照片增删、气泡长按删除、更新公告和自然语言设置修改。实时转写默认关闭。此 APK 使用 Android Debug 签名，仅用于公开测试。",
-    apkUrl: "https://gitee.com/Houton_Bosta/paia-site/releases/download/v1.6.8-test/app-debug.apk",
-    apkSize: 23539497,
-    sha256: "652c65efea8e7ab0a1416693a84f0b28634c5dac0c803d97c714917361140fd0",
-    releasePageUrl: "https://gitee.com/Houton_Bosta/paia-site/releases/tag/v1.6.8-test",
+    releaseDate: "2026-09-29",
+    releaseNotes: "默认 GPT 专家模型更新为 gpt-6-astra；支持渲染常见 LaTeX 公式（行内和独立公式）；实时转写默认关闭。此 APK 使用 Android Debug 签名，仅用于公开测试。",
+    apkUrl: "https://gitee.com/Houton_Bosta/paia-site/releases/download/v1.6.9-test/app-debug.apk",
+    apkSize: 23575888,
+    sha256: "87bcf133cb3f735d3b825f4bea2083e914053a87660f3027711bac23db35467a",
+    releasePageUrl: "https://gitee.com/Houton_Bosta/paia-site/releases/tag/v1.6.9-test",
     repositoryUrl: "https://github.com/HoutonBosta/paia-site"
   };
 
