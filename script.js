@@ -7,15 +7,15 @@
   }
 
   const fallback = {
-    versionName: "1.6.9-test",
-    versionCode: 16,
+    versionName: "1.6.10-test",
+    versionCode: 17,
     minAndroid: "Android 7.0+",
-    releaseDate: "2026-09-29",
-    releaseNotes: "默认 GPT 专家模型更新为 gpt-6-astra；支持渲染常见 LaTeX 公式（行内和独立公式）；实时转写默认关闭。此 APK 使用 Android Debug 签名，仅用于公开测试。",
-    apkUrl: "https://gitee.com/Houton_Bosta/paia-site/releases/download/v1.6.9-test/app-debug.apk",
-    apkSize: 23575888,
-    sha256: "87bcf133cb3f735d3b825f4bea2083e914053a87660f3027711bac23db35467a",
-    releasePageUrl: "https://gitee.com/Houton_Bosta/paia-site/releases/tag/v1.6.9-test",
+    releaseDate: "2026-10-26",
+    releaseNotes: "修复音频问答片段覆盖不足及追问上下文丢失；全面核查逐段读取原音频并报告覆盖范围。新增同文件夹跨会话检索，可按需查阅其他会话的笔记、图片和录音。当前进度提问仍优先使用最近音频。此 APK 使用 Android Debug 签名，仅用于公开测试。",
+    apkUrl: "https://gitee.com/Houton_Bosta/paia-site/releases/download/v1.6.10-test/app-debug.apk",
+    apkSize: 24288657,
+    sha256: "df4bd93a744fead68945188e9c40f2b59f425cdea098d485222a95c8573d9ef7",
+    releasePageUrl: "https://gitee.com/Houton_Bosta/paia-site/releases/tag/v1.6.10-test",
     repositoryUrl: "https://github.com/HoutonBosta/paia-site"
   };
 
